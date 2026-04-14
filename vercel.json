@@ -1,0 +1,7 @@
+{
+  "buildCommand": "cd energie-technik-center && npm install && npm run build",
+  "outputDirectory": "energie-technik-center/dist",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
