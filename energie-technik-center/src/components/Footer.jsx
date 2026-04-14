@@ -18,7 +18,15 @@ export default function Footer() {
             <img
               src="/IMG_0167.jpeg"
               alt="Energie-Technik-Center Logo"
-              style={{ height: 48, width: 'auto', marginBottom: '0.75rem', display: 'block', objectFit: 'contain' }}
+              style={{
+                height: 52,
+                width: 'auto',
+                marginBottom: '0.75rem',
+                display: 'block',
+                objectFit: 'contain',
+                /* Schwarzer Hintergrund des Logos auf dunklem Footer unsichtbar machen */
+                mixBlendMode: 'screen',
+              }}
               onError={e => {
                 e.target.style.display = 'none';
                 e.target.nextSibling.style.display = 'block';

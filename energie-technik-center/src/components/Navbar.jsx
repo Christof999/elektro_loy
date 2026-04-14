@@ -48,23 +48,29 @@ export default function Navbar() {
       }}>
 
         {/* Logo */}
-        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+        <Link to="/" style={{ display: 'flex', alignItems: 'center' }}>
           <img
             src="/IMG_0167.jpeg"
             alt="Energie-Technik-Center Logo"
             style={{
-              height: dark ? 44 : 52,
+              height: dark ? 46 : 56,
               width: 'auto',
               display: 'block',
-              transition: 'height 0.3s',
+              transition: 'height 0.3s, filter 0.3s',
               objectFit: 'contain',
+              /*
+               * Das Logo hat schwarzen Hintergrund.
+               * mix-blend-mode: multiply lässt Schwarz auf weißer Navbar verschwinden.
+               * Auf dunklem Hero bleibt das Logo normal sichtbar.
+               */
+              mixBlendMode: dark ? 'multiply' : 'normal',
             }}
             onError={e => {
               e.target.style.display = 'none';
               e.target.nextSibling.style.display = 'flex';
             }}
           />
-          {/* Fallback Text-Logo */}
+          {/* Fallback Text-Logo (wird angezeigt wenn Bilddatei fehlt) */}
           <div style={{ display: 'none', flexDirection: 'column', lineHeight: 1.15 }}>
             <span style={{
               fontWeight: 800, fontSize: '0.95rem',
