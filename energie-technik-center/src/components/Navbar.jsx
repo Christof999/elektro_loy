@@ -1,124 +1,172 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Zap } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { Menu, X, Phone } from 'lucide-react';
 
 const navLinks = [
-  { label: 'Leistungen', href: '#leistungen' },
-  { label: 'Über uns', href: '#ueber-uns' },
-  { label: 'Referenzen', href: '#referenzen' },
-  { label: 'Kontakt', href: '#kontakt' },
+  { label: 'Start', to: '/' },
+  { label: 'Elektrotechnik', to: '/elektrotechnik' },
+  { label: 'Energietechnik', to: '/energietechnik' },
+  { label: 'Kontakt', to: '/kontakt' },
 ];
 
 export default function Navbar() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
+
+  const isHome = location.pathname === '/';
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
+    const fn = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', fn);
+    fn();
+    return () => window.removeEventListener('scroll', fn);
   }, []);
 
-  const handleNavClick = (e, href) => {
-    e.preventDefault();
-    setMenuOpen(false);
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
+  useEffect(() => {
+    const id = setTimeout(() => {
+      setOpen(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 0);
+    return () => clearTimeout(id);
+  }, [location.pathname]);
+
+  const dark = scrolled || !isHome;
 
   return (
-    <header
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 1000,
-        transition: 'background 0.3s, box-shadow 0.3s, padding 0.3s',
-        background: scrolled ? 'rgba(255,255,255,0.97)' : 'transparent',
-        boxShadow: scrolled ? '0 2px 20px rgba(0,0,0,0.08)' : 'none',
-        backdropFilter: scrolled ? 'blur(10px)' : 'none',
-      }}
-    >
-      <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: scrolled ? '0.75rem 1.5rem' : '1.25rem 1.5rem', transition: 'padding 0.3s' }}>
+    <header style={{
+      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000,
+      background: dark ? 'rgba(255,255,255,0.97)' : 'transparent',
+      boxShadow: dark ? '0 1px 0 var(--border)' : 'none',
+      backdropFilter: dark ? 'blur(12px)' : 'none',
+      transition: 'background 0.3s, box-shadow 0.3s',
+    }}>
+      <div className="container" style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: dark ? '0.7rem 1.5rem' : '1.1rem 1.5rem',
+        transition: 'padding 0.3s',
+      }}>
+
         {/* Logo */}
-        <a href="#hero" onClick={(e) => handleNavClick(e, '#hero')} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', textDecoration: 'none' }}>
-          <div style={{ width: 38, height: 38, background: 'var(--primary)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <Zap size={20} color="#fff" strokeWidth={2.5} />
+        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <img
+            src="/logo.png"
+            alt="Energie-Technik-Center Logo"
+            style={{ height: 40, width: 'auto', display: 'block' }}
+            onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
+          />
+          {/* Fallback wenn kein Logo */}
+          <div style={{
+            display: 'none', width: 36, height: 36,
+            background: 'var(--primary)', borderRadius: 8,
+            alignItems: 'center', justifyContent: 'center',
+          }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M13 2L4 14h8l-1 8 9-12h-8l1-8z" fill="white" strokeWidth="1.5" stroke="white" strokeLinejoin="round" />
+            </svg>
           </div>
-          <div style={{ lineHeight: 1.1 }}>
-            <div style={{ fontWeight: 800, fontSize: '1rem', color: scrolled ? 'var(--text-primary)' : '#fff', transition: 'color 0.3s', letterSpacing: '-0.01em' }}>
+          <div style={{ lineHeight: 1.15 }}>
+            <div style={{
+              fontWeight: 800, fontSize: '0.92rem',
+              color: dark ? 'var(--text-primary)' : '#fff',
+              transition: 'color 0.3s', letterSpacing: '-0.01em',
+            }}>
               Energie-Technik-Center
             </div>
-            <div style={{ fontWeight: 400, fontSize: '0.72rem', color: scrolled ? 'var(--text-light)' : 'rgba(255,255,255,0.7)', transition: 'color 0.3s', letterSpacing: '0.03em' }}>
+            <div style={{
+              fontSize: '0.7rem', fontWeight: 400,
+              color: dark ? 'var(--text-light)' : 'rgba(255,255,255,0.65)',
+              transition: 'color 0.3s',
+            }}>
               Loy GmbH & Co. KG
             </div>
           </div>
-        </a>
+        </Link>
 
         {/* Desktop Nav */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }} className="desktop-nav">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={(e) => handleNavClick(e, link.href)}
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '0.1rem' }} className="nav-desktop">
+          {navLinks.map(({ label, to }) => {
+            const active = location.pathname === to;
+            return (
+              <Link
+                key={to}
+                to={to}
+                style={{
+                  padding: '0.45rem 0.9rem',
+                  borderRadius: 7,
+                  fontWeight: active ? 600 : 500,
+                  fontSize: '0.9rem',
+                  color: active
+                    ? 'var(--primary)'
+                    : dark ? 'var(--text-secondary)' : 'rgba(255,255,255,0.85)',
+                  background: active ? 'rgba(243,146,0,0.08)' : 'transparent',
+                  transition: 'color 0.2s, background 0.2s',
+                  textDecoration: 'none',
+                }}
+                onMouseEnter={e => { if (!active) { e.target.style.color = 'var(--primary)'; } }}
+                onMouseLeave={e => { if (!active) { e.target.style.color = dark ? 'var(--text-secondary)' : 'rgba(255,255,255,0.85)'; } }}
+              >
+                {label}
+              </Link>
+            );
+          })}
+          <a
+            href="tel:+4998318809600"
+            className="btn-primary"
+            style={{ marginLeft: '0.75rem', padding: '0.55rem 1.25rem', fontSize: '0.88rem', gap: '0.4rem' }}
+          >
+            <Phone size={14} /> 09831 880960
+          </a>
+        </nav>
+
+        {/* Burger */}
+        <button
+          onClick={() => setOpen(!open)}
+          className="nav-burger"
+          style={{
+            display: 'none', background: 'none', border: 'none',
+            cursor: 'pointer', padding: '0.4rem',
+            color: dark ? 'var(--text-primary)' : '#fff',
+          }}
+          aria-label="Menü"
+        >
+          {open ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
+
+      {/* Mobile drawer */}
+      {open && (
+        <div style={{
+          background: '#fff', borderTop: '1px solid var(--border)',
+          padding: '0.75rem 1.5rem 1.5rem',
+        }}>
+          {navLinks.map(({ label, to }) => (
+            <Link
+              key={to}
+              to={to}
               style={{
-                padding: '0.5rem 1rem',
-                borderRadius: 6,
-                fontWeight: 500,
-                fontSize: '0.95rem',
-                color: scrolled ? 'var(--text-primary)' : 'rgba(255,255,255,0.9)',
-                transition: 'color 0.2s, background 0.2s',
+                display: 'block', padding: '0.85rem 0',
+                borderBottom: '1px solid var(--border)',
+                fontWeight: 500, color: 'var(--text-primary)', fontSize: '1rem',
               }}
-              onMouseEnter={e => { e.target.style.color = 'var(--primary)'; e.target.style.background = scrolled ? 'rgba(243,146,0,0.08)' : 'rgba(255,255,255,0.1)'; }}
-              onMouseLeave={e => { e.target.style.color = scrolled ? 'var(--text-primary)' : 'rgba(255,255,255,0.9)'; e.target.style.background = 'transparent'; }}
             >
-              {link.label}
-            </a>
+              {label}
+            </Link>
           ))}
           <a
             href="tel:+4998318809600"
             className="btn-primary"
-            style={{ marginLeft: '0.75rem', padding: '0.6rem 1.4rem', fontSize: '0.9rem' }}
+            style={{ marginTop: '1rem', width: '100%', justifyContent: 'center' }}
           >
-            Jetzt anrufen
-          </a>
-        </nav>
-
-        {/* Mobile Burger */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          style={{ display: 'none', background: 'none', border: 'none', cursor: 'pointer', color: scrolled ? 'var(--text-primary)' : '#fff', padding: '0.5rem' }}
-          className="mobile-menu-btn"
-          aria-label="Menü öffnen"
-        >
-          {menuOpen ? <X size={26} /> : <Menu size={26} />}
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      {menuOpen && (
-        <div style={{ background: '#fff', borderTop: '1px solid var(--border)', padding: '1rem 1.5rem 1.5rem' }}>
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={(e) => handleNavClick(e, link.href)}
-              style={{ display: 'block', padding: '0.9rem 0', fontWeight: 500, color: 'var(--text-primary)', borderBottom: '1px solid var(--border)', fontSize: '1rem' }}
-            >
-              {link.label}
-            </a>
-          ))}
-          <a href="tel:+4998318809600" className="btn-primary" style={{ marginTop: '1.25rem', width: '100%', justifyContent: 'center' }}>
-            Jetzt anrufen
+            <Phone size={15} /> 09831 880960
           </a>
         </div>
       )}
 
       <style>{`
-        @media (max-width: 820px) {
-          .desktop-nav { display: none !important; }
-          .mobile-menu-btn { display: flex !important; }
+        @media (max-width: 860px) {
+          .nav-desktop { display: none !important; }
+          .nav-burger   { display: flex !important; }
         }
       `}</style>
     </header>
