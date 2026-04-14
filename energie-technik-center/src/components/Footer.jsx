@@ -16,12 +16,15 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <img
-              src="/logo.png"
-              alt="Logo"
-              style={{ height: 36, marginBottom: '0.75rem', display: 'block' }}
-              onError={e => e.target.style.display = 'none'}
+              src="/IMG_0167.jpeg"
+              alt="Energie-Technik-Center Logo"
+              style={{ height: 48, width: 'auto', marginBottom: '0.75rem', display: 'block', objectFit: 'contain' }}
+              onError={e => {
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'block';
+              }}
             />
-            <div style={{ fontWeight: 700, color: '#fff', fontSize: '0.9rem', marginBottom: '0.4rem' }}>
+            <div style={{ display: 'none', fontWeight: 700, color: '#fff', fontSize: '0.9rem', marginBottom: '0.4rem' }}>
               Energie-Technik-Center
             </div>
             <div style={{ fontSize: '0.82rem', lineHeight: 1.7, maxWidth: 220 }}>

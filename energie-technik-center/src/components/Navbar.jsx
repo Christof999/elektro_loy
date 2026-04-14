@@ -48,38 +48,38 @@ export default function Navbar() {
       }}>
 
         {/* Logo */}
-        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
           <img
-            src="/logo.png"
+            src="/IMG_0167.jpeg"
             alt="Energie-Technik-Center Logo"
-            style={{ height: 40, width: 'auto', display: 'block' }}
-            onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
+            style={{
+              height: dark ? 44 : 52,
+              width: 'auto',
+              display: 'block',
+              transition: 'height 0.3s',
+              objectFit: 'contain',
+            }}
+            onError={e => {
+              e.target.style.display = 'none';
+              e.target.nextSibling.style.display = 'flex';
+            }}
           />
-          {/* Fallback wenn kein Logo */}
-          <div style={{
-            display: 'none', width: 36, height: 36,
-            background: 'var(--primary)', borderRadius: 8,
-            alignItems: 'center', justifyContent: 'center',
-          }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M13 2L4 14h8l-1 8 9-12h-8l1-8z" fill="white" strokeWidth="1.5" stroke="white" strokeLinejoin="round" />
-            </svg>
-          </div>
-          <div style={{ lineHeight: 1.15 }}>
-            <div style={{
-              fontWeight: 800, fontSize: '0.92rem',
+          {/* Fallback Text-Logo */}
+          <div style={{ display: 'none', flexDirection: 'column', lineHeight: 1.15 }}>
+            <span style={{
+              fontWeight: 800, fontSize: '0.95rem',
               color: dark ? 'var(--text-primary)' : '#fff',
-              transition: 'color 0.3s', letterSpacing: '-0.01em',
+              transition: 'color 0.3s',
             }}>
               Energie-Technik-Center
-            </div>
-            <div style={{
-              fontSize: '0.7rem', fontWeight: 400,
+            </span>
+            <span style={{
+              fontSize: '0.7rem',
               color: dark ? 'var(--text-light)' : 'rgba(255,255,255,0.65)',
               transition: 'color 0.3s',
             }}>
               Loy GmbH & Co. KG
-            </div>
+            </span>
           </div>
         </Link>
 
