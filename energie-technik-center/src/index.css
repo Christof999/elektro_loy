@@ -188,17 +188,17 @@ h1, h2, h3, h4 { line-height: 1.15; letter-spacing: -0.022em; }
 /* ─────────────────────────────────────────
    SCROLL REVEAL
    Emil: never scale(0), start scale(0.97) + opacity
+   400ms: kurz genug um snappy zu wirken, lang genug für Eleganz
    ───────────────────────────────────────── */
 .reveal {
   opacity: 0;
-  /* Combine translate + scale for natural entry */
-  transform: translateY(18px) scale(0.98);
-  transition: opacity 480ms var(--ease-out),
-              transform 480ms var(--ease-out);
+  transform: translateY(20px);
+  transition: opacity 420ms var(--ease-out),
+              transform 420ms var(--ease-out);
 }
 .reveal.visible {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: translateY(0);
 }
 
 /* ─────────────────────────────────────────
@@ -237,16 +237,16 @@ h1, h2, h3, h4 { line-height: 1.15; letter-spacing: -0.022em; }
 .card {
   background: var(--bg-white);
   border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  transition: box-shadow  220ms var(--ease-out),
-              transform   220ms var(--ease-out),
-              border-color 220ms var(--ease-out);
+  border-radius: 18px;   /* etwas runder = hochwertiger */
+  transition: box-shadow  240ms var(--ease-out),
+              transform   240ms var(--ease-out),
+              border-color 240ms var(--ease-out);
 }
 @media (hover: hover) and (pointer: fine) {
   .card:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-2px);
-    border-color: rgba(0,0,0,0.04);
+    box-shadow: 0 16px 48px rgba(15,23,42,0.10), 0 4px 12px rgba(15,23,42,0.06);
+    transform: translateY(-3px);
+    border-color: rgba(0,0,0,0.03);
   }
 }
 
@@ -278,6 +278,29 @@ h1, h2, h3, h4 { line-height: 1.15; letter-spacing: -0.022em; }
 .section-eyebrow-white span { color: rgba(255,255,255,0.55); }
 
 /* ─────────────────────────────────────────
+   HERO ENTRANCE ANIMATIONS
+   Emil: one-shot first-time animations → fine to animate
+   CSS animations run off main thread → smooth even under load
+   ───────────────────────────────────────── */
+@keyframes heroFadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+@keyframes heroFadeRight {
+  from { opacity: 0; transform: translateX(28px) scale(0.97); }
+  to   { opacity: 1; transform: translateX(0)    scale(1);    }
+}
+
+.hero-enter-1 { animation: heroFadeUp 0.65s var(--ease-out) 0.10s both; }
+.hero-enter-2 { animation: heroFadeUp 0.65s var(--ease-out) 0.22s both; }
+.hero-enter-3 { animation: heroFadeUp 0.65s var(--ease-out) 0.34s both; }
+.hero-enter-4 { animation: heroFadeUp 0.65s var(--ease-out) 0.44s both; }
+.hero-enter-5 { animation: heroFadeUp 0.65s var(--ease-out) 0.54s both; }
+
+/* Emil: entry from translateX + scale(0.97) — nie von scale(0) */
+.hero-enter-card { animation: heroFadeRight 0.7s var(--ease-out) 0.30s both; }
+
+/* ─────────────────────────────────────────
    ACCESSIBILITY — prefers-reduced-motion
    Emil: fewer/gentler animations, not zero
    Keep opacity; remove movement transforms
@@ -298,4 +321,11 @@ h1, h2, h3, h4 { line-height: 1.15; letter-spacing: -0.022em; }
   .btn-outline-white:active { transform: none; }
   .card { transition: none; }
   .page-enter-active { transition: opacity 200ms ease; }
+  /* Hero-Animationen deaktivieren */
+  .hero-enter-1, .hero-enter-2, .hero-enter-3,
+  .hero-enter-4, .hero-enter-5, .hero-enter-card {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }
