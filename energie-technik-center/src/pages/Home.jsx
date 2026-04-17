@@ -161,7 +161,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem' }}>
+          <div className="stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem' }}>
             {/* Elektrotechnik */}
             <Link to="/elektrotechnik" style={{ textDecoration: 'none' }}>
               <div className="card reveal" style={{
@@ -309,7 +309,7 @@ export default function Home() {
             </span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
+          <div className="stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
             {reviews.map(r => (
               <div key={r.name} className="card reveal" style={{ padding: '2rem', position: 'relative', overflow: 'hidden' }}>
                 {/* Decorative quote */}

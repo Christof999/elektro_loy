@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap');
 
 :root {
+  /* Brand */
   --primary: #f59e0b;
   --primary-dark: #d97706;
   --primary-light: #fbbf24;
@@ -8,35 +9,41 @@
 
   --secondary: #0f172a;
   --secondary-mid: #1e293b;
-
   --accent: #1d4ed8;
-  --accent-light: #eff6ff;
 
+  /* Text */
   --text-primary: #0f172a;
   --text-secondary: #64748b;
   --text-muted: #94a3b8;
   --text-light: #94a3b8;
 
+  /* Backgrounds */
   --bg-white: #ffffff;
   --bg-light: #f8fafc;
   --bg-medium: #f1f5f9;
-
   --border: #e2e8f0;
 
+  /* Shadows */
   --shadow-xs: 0 1px 2px rgba(15,23,42,0.04);
   --shadow-sm: 0 1px 4px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04);
   --shadow-md: 0 4px 16px rgba(15,23,42,0.08), 0 2px 4px rgba(15,23,42,0.04);
   --shadow-lg: 0 12px 40px rgba(15,23,42,0.10), 0 4px 8px rgba(15,23,42,0.05);
   --shadow-xl: 0 24px 60px rgba(15,23,42,0.12), 0 8px 20px rgba(15,23,42,0.06);
 
+  /* Radii */
   --r-sm: 8px;
   --r-md: 12px;
   --r-lg: 16px;
   --r-xl: 24px;
+
+  /* Emil Kowalski: Custom easing curves – never use default ease-in for UI */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
 html { scroll-behavior: smooth; }
 
 body {
@@ -57,7 +64,9 @@ img { max-width: 100%; height: auto; }
   padding: 0 1.5rem;
 }
 
-/* ── Buttons ── */
+/* ─────────────────────────────────────────
+   BUTTONS  — Emil: must feel responsive
+   ───────────────────────────────────────── */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -71,14 +80,24 @@ img { max-width: 100%; height: auto; }
   border: none;
   cursor: pointer;
   letter-spacing: 0.01em;
-  transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
+  /* Specify exact properties — never 'all' */
+  transition: background 150ms var(--ease-out),
+              box-shadow 150ms var(--ease-out),
+              transform  150ms var(--ease-out);
 }
-.btn-primary:hover {
-  background: var(--primary-dark);
-  box-shadow: 0 6px 24px rgba(245,158,11,0.35);
-  transform: translateY(-1px);
+/* Gate hover behind pointer media query */
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover {
+    background: var(--primary-dark);
+    box-shadow: 0 6px 24px rgba(245,158,11,0.32);
+    transform: translateY(-1px);
+  }
 }
-.btn-primary:active { transform: translateY(0); }
+/* Emil: :active scale gives instant press feedback */
+.btn-primary:active {
+  transform: scale(0.97);
+  transition-duration: 80ms;
+}
 
 .btn-outline {
   display: inline-flex;
@@ -93,13 +112,19 @@ img { max-width: 100%; height: auto; }
   border: 1.5px solid var(--border);
   cursor: pointer;
   letter-spacing: 0.01em;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  transition: border-color 150ms var(--ease-out),
+              color       150ms var(--ease-out),
+              background  150ms var(--ease-out),
+              transform   150ms var(--ease-out);
 }
-.btn-outline:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-  background: var(--primary-bg);
+@media (hover: hover) and (pointer: fine) {
+  .btn-outline:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-bg);
+  }
 }
+.btn-outline:active { transform: scale(0.97); transition-duration: 80ms; }
 
 .btn-outline-white {
   display: inline-flex;
@@ -114,14 +139,21 @@ img { max-width: 100%; height: auto; }
   border: 1.5px solid rgba(255,255,255,0.18);
   cursor: pointer;
   letter-spacing: 0.01em;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 150ms var(--ease-out),
+              background  150ms var(--ease-out),
+              transform   150ms var(--ease-out);
 }
-.btn-outline-white:hover {
-  border-color: rgba(255,255,255,0.45);
-  background: rgba(255,255,255,0.13);
+@media (hover: hover) and (pointer: fine) {
+  .btn-outline-white:hover {
+    border-color: rgba(255,255,255,0.42);
+    background: rgba(255,255,255,0.12);
+  }
 }
+.btn-outline-white:active { transform: scale(0.97); transition-duration: 80ms; }
 
-/* ── Badge / Label ── */
+/* ─────────────────────────────────────────
+   BADGE / LABEL
+   ───────────────────────────────────────── */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -142,52 +174,85 @@ img { max-width: 100%; height: auto; }
 
 h1, h2, h3, h4 { line-height: 1.15; letter-spacing: -0.022em; }
 
-/* ── Page Transitions ── */
+/* ─────────────────────────────────────────
+   PAGE TRANSITION
+   ───────────────────────────────────────── */
 .page-enter { opacity: 0; transform: translateY(10px); }
 .page-enter-active {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  /* Emil: ease-out feels responsive; 300ms max for UI */
+  transition: opacity 280ms var(--ease-out), transform 280ms var(--ease-out);
 }
 
-/* ── Scroll Reveal ── */
+/* ─────────────────────────────────────────
+   SCROLL REVEAL
+   Emil: never scale(0), start scale(0.97) + opacity
+   ───────────────────────────────────────── */
 .reveal {
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  /* Combine translate + scale for natural entry */
+  transform: translateY(18px) scale(0.98);
+  transition: opacity 480ms var(--ease-out),
+              transform 480ms var(--ease-out);
 }
-.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
 
-/* ── Section Spacing ── */
-.section { padding: 5.5rem 0; }
+/* ─────────────────────────────────────────
+   STAGGER UTILITIES
+   Emil: 30–80ms between items, short delays
+   ───────────────────────────────────────── */
+.stagger > .reveal:nth-child(1) { transition-delay:   0ms; }
+.stagger > .reveal:nth-child(2) { transition-delay:  60ms; }
+.stagger > .reveal:nth-child(3) { transition-delay: 120ms; }
+.stagger > .reveal:nth-child(4) { transition-delay: 180ms; }
+.stagger > .reveal:nth-child(5) { transition-delay: 240ms; }
+
+/* ─────────────────────────────────────────
+   SECTION SPACING
+   ───────────────────────────────────────── */
+.section    { padding: 5.5rem 0; }
 .section-sm { padding: 3.5rem 0; }
-
 @media (max-width: 768px) {
-  .section { padding: 3.5rem 0; }
+  .section    { padding: 3.5rem 0; }
   .section-sm { padding: 2.5rem 0; }
 }
 
-/* ── Hero Grid ── */
+/* ─────────────────────────────────────────
+   HERO GRID
+   ───────────────────────────────────────── */
 .hero-grid { grid-template-columns: 1fr auto; }
 @media (max-width: 860px) {
   .hero-grid { grid-template-columns: 1fr !important; }
   .hero-anim { display: none; }
 }
 
-/* ── Card ── */
+/* ─────────────────────────────────────────
+   CARD
+   Emil: gate hover behind pointer MQ
+   ───────────────────────────────────────── */
 .card {
   background: var(--bg-white);
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
-  transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+  transition: box-shadow  220ms var(--ease-out),
+              transform   220ms var(--ease-out),
+              border-color 220ms var(--ease-out);
 }
-.card:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-2px);
-  border-color: rgba(0,0,0,0.05);
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+    border-color: rgba(0,0,0,0.04);
+  }
 }
 
-/* ── Section label with accent line ── */
+/* ─────────────────────────────────────────
+   SECTION EYEBROW (accent line + label)
+   ───────────────────────────────────────── */
 .section-eyebrow {
   display: flex;
   align-items: center;
@@ -210,5 +275,27 @@ h1, h2, h3, h4 { line-height: 1.15; letter-spacing: -0.022em; }
   text-transform: uppercase;
   color: var(--primary-dark);
 }
-.section-eyebrow-white::before { background: var(--primary); }
-.section-eyebrow-white span { color: rgba(255,255,255,0.6); }
+.section-eyebrow-white span { color: rgba(255,255,255,0.55); }
+
+/* ─────────────────────────────────────────
+   ACCESSIBILITY — prefers-reduced-motion
+   Emil: fewer/gentler animations, not zero
+   Keep opacity; remove movement transforms
+   ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    transform: none;
+    transition: opacity 200ms ease;
+  }
+  .stagger > .reveal:nth-child(n) { transition-delay: 0ms; }
+  .btn-primary,
+  .btn-outline,
+  .btn-outline-white {
+    transition: background 150ms ease, border-color 150ms ease;
+  }
+  .btn-primary:active,
+  .btn-outline:active,
+  .btn-outline-white:active { transform: none; }
+  .card { transition: none; }
+  .page-enter-active { transition: opacity 200ms ease; }
+}
