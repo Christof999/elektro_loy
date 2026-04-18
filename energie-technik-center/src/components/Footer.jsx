@@ -104,12 +104,12 @@ export default function Footer() {
         }}>
           <span>© {year} Loy GmbH & Co. KG. Alle Rechte vorbehalten.</span>
           <div style={{ display: 'flex', gap: '1.5rem' }}>
-            {['Impressum', 'Datenschutz'].map(l => (
-              <a key={l} href="#"
+            {[{ label: 'Impressum', to: '/impressum' }, { label: 'Datenschutz', to: '/datenschutz' }].map(({ label, to }) => (
+              <Link key={to} to={to}
                 style={{ color: 'rgba(255,255,255,0.22)', transition: 'color 0.15s' }}
                 onMouseEnter={e => e.target.style.color = 'rgba(255,255,255,0.6)'}
                 onMouseLeave={e => e.target.style.color = 'rgba(255,255,255,0.22)'}
-              >{l}</a>
+              >{label}</Link>
             ))}
           </div>
         </div>

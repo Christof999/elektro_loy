@@ -34,6 +34,12 @@ export default function Navbar() {
   const solid = scrolled || !isHome;
 
   return (
+    <>
+      {/* Skip-to-content — visible only on keyboard focus */}
+      <a href="#main-content" className="skip-to-content">
+        Zum Hauptinhalt springen
+      </a>
+
     <header style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000,
       background: solid ? 'rgba(255,255,255,0.96)' : 'transparent',
@@ -93,6 +99,7 @@ export default function Navbar() {
               <Link
                 key={to}
                 to={to}
+                aria-current={active ? 'page' : undefined}
                 style={{
                   padding: '0.5rem 1rem',
                   borderRadius: 'var(--r-sm)',
@@ -102,7 +109,6 @@ export default function Navbar() {
                   textDecoration: 'none',
                   position: 'relative',
                   transition: 'color 0.15s var(--ease-out), background 0.15s var(--ease-out)',
-                  /* ── Farb-Logik: korrekt für beide States ── */
                   color: active
                     ? (solid ? 'var(--text-primary)' : '#fff')
                     : solid ? 'var(--text-secondary)' : 'rgba(255,255,255,0.65)',
@@ -177,6 +183,7 @@ export default function Navbar() {
               <Link
                 key={to}
                 to={to}
+                aria-current={active ? 'page' : undefined}
                 style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                   padding: '0.9rem 0',
@@ -214,5 +221,6 @@ export default function Navbar() {
         }
       `}</style>
     </header>
+    </>
   );
 }

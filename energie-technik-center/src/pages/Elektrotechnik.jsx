@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Zap, Home, Shield, Wrench, CheckCircle, ArrowRight, Phone } from 'lucide-react';
+import { useMeta } from '../hooks/useMeta';
 
 /* ── Animated SVG Illustrations ── */
 
@@ -197,6 +198,10 @@ function useReveal() {
 
 export default function Elektrotechnik() {
   useReveal();
+  useMeta({
+    title: 'Elektrotechnik',
+    description: 'Elektroinstallation, Smart Home, Sicherheitstechnik und Prüfungen – normgerecht und zuverlässig in der Region Ansbach. Jetzt kostenlos anfragen.',
+  });
   return (
     <>
       {/* ── Hero ── */}
@@ -237,7 +242,7 @@ export default function Elektrotechnik() {
       </section>
 
       {/* ── Leistungen ── */}
-      <section className="section" style={{ background: 'var(--bg-light)', borderBottom: '1px solid var(--border)' }}>
+      <section aria-label="Leistungen Elektrotechnik" className="section" style={{ background: 'var(--bg-light)', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
           <div style={{ maxWidth: 520, marginBottom: '3rem' }} className="reveal">
             <div className="section-eyebrow"><span>Leistungen</span></div>
@@ -280,7 +285,7 @@ export default function Elektrotechnik() {
       </section>
 
       {/* ── Qualität ── */}
-      <section className="section" style={{ background: 'var(--bg-white)' }}>
+      <section aria-label="Qualitätsversprechen" className="section" style={{ background: 'var(--bg-white)' }}>
         <div className="container">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '4rem', alignItems: 'center' }}>
             <div className="reveal">

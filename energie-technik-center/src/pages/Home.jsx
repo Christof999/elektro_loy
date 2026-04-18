@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Star, Zap, Sun, Phone } from 'lucide-react';
 import HeroScene from '../components/HeroScene';
+import { useMeta } from '../hooks/useMeta';
 
 const reviews = [
   { name: 'Jan Reimann',      rating: 5, text: 'Top Firma, manchmal dauerts aber es wird jedes Problem gelöst.',                                                              time: 'vor 4 Monaten' },
@@ -78,6 +79,10 @@ function ServiceCard({ to, icon: Icon, title, description }) {
 
 export default function Home() {
   useReveal();
+  useMeta({
+    title: null,
+    description: 'Energie-Technik-Center Loy GmbH & Co. KG – Ihr Experte für Photovoltaik, Wärmepumpen, E-Mobilität und Elektroinstallation in der Region Ansbach.',
+  });
 
   return (
     <>
@@ -85,7 +90,7 @@ export default function Home() {
       <div style={{ background: DARK }}>
 
         {/* ─────────────────── HERO ─────────────────── */}
-        <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
+        <section aria-label="Hero" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
           <HeroScene />
 
           {/* Ambient glows */}
@@ -212,7 +217,7 @@ export default function Home() {
         </section>
 
         {/* ─────────────────── LEISTUNGEN ─────────────────── */}
-        <section style={{ padding: '5.5rem 0 6.5rem', position: 'relative' }}>
+        <section aria-label="Unsere Bereiche" style={{ padding: '5.5rem 0 6.5rem', position: 'relative' }}>
           {/* Subtle separator line from hero */}
           <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '90%', maxWidth: 900, height: 1, background: 'rgba(255,255,255,0.05)' }} />
 
@@ -256,7 +261,7 @@ export default function Home() {
       <div style={{ height: 140, background: `linear-gradient(to bottom, ${DARK_SOLID}, var(--bg-light))`, pointerEvents: 'none' }} />
 
       {/* ─────────────────── ÜBER UNS ─────────────────── */}
-      <section className="section-sm" style={{ background: 'var(--bg-light)', borderBottom: '1px solid var(--border)' }}>
+      <section aria-label="Über uns" className="section-sm" style={{ background: 'var(--bg-light)', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem', alignItems: 'center' }}>
 
@@ -305,7 +310,7 @@ export default function Home() {
       </section>
 
       {/* ─────────────────── KUNDENSTIMMEN ─────────────────── */}
-      <section className="section" style={{ background: 'var(--bg-white)' }}>
+      <section aria-label="Kundenstimmen" className="section" style={{ background: 'var(--bg-white)' }}>
         <div className="container">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '3rem', flexWrap: 'wrap', gap: '1rem' }} className="reveal">
             <div>
@@ -367,7 +372,7 @@ export default function Home() {
       </section>
 
       {/* ─────────────────── CTA ─────────────────── */}
-      <section style={{
+      <section aria-label="Kontaktaufforderung" style={{
         background: 'linear-gradient(150deg, #060c18 0%, #0c1d35 100%)',
         padding: '5.5rem 0', position: 'relative', overflow: 'hidden',
       }}>

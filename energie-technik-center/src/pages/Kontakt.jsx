@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Phone, MapPin, Clock, Send, CheckCircle } from 'lucide-react';
+import { useMeta } from '../hooks/useMeta';
 
 function useReveal() {
   useEffect(() => {
@@ -56,9 +57,14 @@ function Field({ label, name, value, onChange, required, placeholder, type = 'te
 
 export default function Kontakt() {
   useReveal();
+  useMeta({
+    title: 'Kontakt',
+    description: 'Kostenlose und unverbindliche Erstberatung. Kontaktieren Sie die Energie-Technik-Center Loy GmbH & Co. KG per Formular, Telefon oder kommen Sie vorbei.',
+  });
   const [form, setForm] = useState({ name: '', email: '', telefon: '', betreff: '', nachricht: '', bereich: '' });
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const successRef = useRef(null);
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
   const handleSubmit = e => {
@@ -66,6 +72,10 @@ export default function Kontakt() {
     setLoading(true);
     setTimeout(() => { setLoading(false); setSent(true); }, 900);
   };
+
+  useEffect(() => {
+    if (sent && successRef.current) successRef.current.focus();
+  }, [sent]);
 
   return (
     <>
@@ -101,7 +111,7 @@ export default function Kontakt() {
       </section>
 
       {/* ── Content ── */}
-      <section className="section" style={{ background: 'var(--bg-light)', borderBottom: '1px solid var(--border)' }}>
+      <section aria-label="Kontaktformular und Informationen" className="section" style={{ background: 'var(--bg-light)', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', alignItems: 'start' }}>
 
@@ -188,7 +198,7 @@ export default function Kontakt() {
             {/* Right: Contact form */}
             <div className="card reveal" style={{ padding: '2.25rem' }}>
               {sent ? (
-                <div style={{ textAlign: 'center', padding: '2.5rem 1rem' }}>
+                <div ref={successRef} role="status" tabIndex="-1" style={{ textAlign: 'center', padding: '2.5rem 1rem', outline: 'none' }}>
                   {/* Emil: entry from scale(0.95) + opacity, never scale(0) */}
                   <div style={{
                     width: 60, height: 60, borderRadius: '50%',

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Sun, Battery, Car, Thermometer, CheckCircle, ArrowRight, Phone } from 'lucide-react';
+import { useMeta } from '../hooks/useMeta';
 
 /* ── Animated SVG Illustrations ── */
 
@@ -187,6 +188,10 @@ function useReveal() {
 
 export default function Energietechnik() {
   useReveal();
+  useMeta({
+    title: 'Energietechnik',
+    description: 'Photovoltaik, Stromspeicher, Wärmepumpen und E-Mobilität aus einer Hand. Jetzt kostenlos beraten lassen – in der Region Ansbach und Umgebung.',
+  });
   return (
     <>
       {/* ── Hero ── */}
@@ -227,7 +232,7 @@ export default function Energietechnik() {
       </section>
 
       {/* ── Leistungen ── */}
-      <section className="section" style={{ background: 'var(--bg-light)', borderBottom: '1px solid var(--border)' }}>
+      <section aria-label="Leistungen Energietechnik" className="section" style={{ background: 'var(--bg-light)', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
           <div style={{ maxWidth: 520, marginBottom: '3rem' }} className="reveal">
             <div className="section-eyebrow"><span>Leistungen</span></div>
@@ -270,7 +275,7 @@ export default function Energietechnik() {
       </section>
 
       {/* ── Nachhaltigkeit ── */}
-      <section className="section" style={{ background: 'var(--bg-white)' }}>
+      <section aria-label="Nachhaltige Energie" className="section" style={{ background: 'var(--bg-white)' }}>
         <div className="container">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '4rem', alignItems: 'center' }}>
             <div className="reveal">
