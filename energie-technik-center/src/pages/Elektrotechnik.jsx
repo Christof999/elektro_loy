@@ -94,7 +94,7 @@ function SecurityIllustration() {
       <rect x="22" y="42" width="54" height="32" rx="4" fill="#1e293b" stroke="#3b82f6" strokeWidth="1"/>
       <polygon points="76,46 96,36 96,72 76,62" fill="#1e293b" stroke="#3b82f6" strokeWidth="1"/>
       <circle cx="44" cy="58" r="8" fill="#0f172a"/>
-      <circle cx="44" cy="58" r="4" fill="#1d4ed8" opacity="0.8"/>
+      <circle cx="44" cy="58" r="4" fill="var(--primary-dark)" opacity="0.8"/>
       <g className="sec-scan">
         <path d="M60 55 L130 30" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" opacity="0.5"/>
       </g>
@@ -208,7 +208,7 @@ export default function Elektrotechnik() {
         <ElektroSzene />
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: 'radial-gradient(ellipse 55% 60% at 75% 50%, rgba(29,78,216,0.08) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse 55% 60% at 75% 50%, rgba(245,158,11,0.05) 0%, transparent 70%)',
         }} />
 
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
@@ -257,10 +257,10 @@ export default function Elektrotechnik() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.65rem' }}>
                     <div style={{
                       width: 36, height: 36, borderRadius: 'var(--r-sm)',
-                      background: 'rgba(29,78,216,0.08)',
+                      background: 'rgba(245,158,11,0.08)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                     }}>
-                      <ItemIcon size={17} color="#1d4ed8" />
+                      <ItemIcon size={17} color="var(--primary-dark)" />
                     </div>
                     <h3 style={{ fontWeight: 700, fontSize: '1.02rem' }}>{title}</h3>
                   </div>
@@ -268,7 +268,7 @@ export default function Elektrotechnik() {
                   <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.32rem' }}>
                     {items.map(i => (
                       <li key={i} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
-                        <CheckCircle size={12} color="#1d4ed8" style={{ flexShrink: 0 }} /> {i}
+                        <CheckCircle size={12} color="var(--primary-dark)" style={{ flexShrink: 0 }} /> {i}
                       </li>
                     ))}
                   </ul>
@@ -293,10 +293,10 @@ export default function Elektrotechnik() {
                   <div key={title} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
                     <div style={{
                       width: 32, height: 32, borderRadius: 'var(--r-sm)',
-                      background: 'rgba(29,78,216,0.07)',
+                      background: 'rgba(245,158,11,0.08)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1,
                     }}>
-                      <CheckCircle size={15} color="#1d4ed8" />
+                      <CheckCircle size={15} color="var(--primary-dark)" />
                     </div>
                     <div>
                       <div style={{ fontWeight: 600, fontSize: '0.92rem', marginBottom: '0.2rem' }}>{title}</div>

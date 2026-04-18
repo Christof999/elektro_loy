@@ -134,30 +134,32 @@ function HeatpumpIllustration() {
   );
 }
 
+const AMBER = '#d97706';
+
 const leistungen = [
   {
-    icon: Sun, color: '#d97706',
+    icon: Sun, color: AMBER,
     title: 'Photovoltaik',
     desc: 'Wir planen und installieren Ihre Solaranlage – von der Dimensionierung über die Montage bis zur Netzanmeldung und Inbetriebnahme.',
     items: ['Planung & Dimensionierung', 'Montage Dach & Fassade', 'Netzanmeldung & Abnahme', 'Wechselrichter & Monitoring'],
     Illustration: SolarIllustration,
   },
   {
-    icon: Battery, color: '#2563eb',
+    icon: Battery, color: AMBER,
     title: 'Stromspeicher',
     desc: 'Mit einem Batteriespeicher nutzen Sie Ihren Solarstrom rund um die Uhr und werden unabhängiger vom Stromnetz.',
     items: ['Bedarfsanalyse & Auslegung', 'Integration in PV-Anlage', 'Notstromfähige Systeme', 'Systemüberwachung'],
     Illustration: BatteryIllustration,
   },
   {
-    icon: Car, color: '#059669',
+    icon: Car, color: AMBER,
     title: 'E-Mobilität & Ladestation',
     desc: 'Wir installieren Wallboxen und Ladesysteme für Privatpersonen und Unternehmen – inklusive Lastmanagement und Fördermittelberatung.',
     items: ['Wallbox-Installation', 'Lastmanagementsystem', 'Fördermittelberatung KfW', 'Gewerbliche Ladesäulen'],
     Illustration: WallboxIllustration,
   },
   {
-    icon: Thermometer, color: '#dc2626',
+    icon: Thermometer, color: AMBER,
     title: 'Wärmepumpen',
     desc: 'Als Systempartner installieren wir Luft-Wasser- und Erdwärmepumpen und kümmern uns um die elektrische Anbindung.',
     items: ['Luft-Wasser-Wärmepumpen', 'Erdwärmesysteme', 'Elektrische Einbindung', 'Smart-Grid-fähige Steuerung'],
