@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Phone } from 'lucide-react';
+import LogoMark from './LogoMark';
 
 const navLinks = [
   { label: 'Elektrotechnik', to: '/elektrotechnik' },
@@ -9,14 +10,12 @@ const navLinks = [
 ];
 
 export default function Navbar() {
-  const [open, setOpen]       = useState(false);
+  const [open, setOpen]         = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const location              = useLocation();
-  const isHome                = location.pathname === '/';
+  const location                = useLocation();
+  const isHome                  = location.pathname === '/';
 
   useEffect(() => {
-    /* Home: stay dark until 80% of viewport scrolled (keeps dark glass in full hero).
-       Sub-pages: switch at 320px (covers dark hero section). */
     const fn = () => {
       const threshold = isHome ? window.innerHeight * 0.8 : 320;
       setScrolled(window.scrollY > threshold);
@@ -34,7 +33,6 @@ export default function Navbar() {
     return () => clearTimeout(id);
   }, [location.pathname]);
 
-  /* dark glass on hero, light glass on content */
   const dark = !scrolled;
 
   return (
@@ -47,7 +45,7 @@ export default function Navbar() {
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000,
         background: dark
           ? 'rgba(4, 8, 15, 0.55)'
-          : 'rgba(255, 255, 255, 0.88)',
+          : 'rgba(255, 255, 255, 0.92)',
         backdropFilter: 'blur(28px) saturate(1.8)',
         WebkitBackdropFilter: 'blur(28px) saturate(1.8)',
         borderBottom: dark
@@ -57,48 +55,11 @@ export default function Navbar() {
       }}>
         <div className="container" style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: dark ? '0.9rem 2rem' : '0.65rem 2rem',
+          padding: dark ? '0.75rem 2rem' : '0.5rem 2rem',
           transition: 'padding 0.35s var(--ease-out)',
         }}>
 
-          {/* Logo */}
-          <Link to="/" aria-label="Startseite" style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-            <img
-              src="/IMG_0167.jpeg"
-              alt="Energie-Technik-Center Logo"
-              style={{
-                height: dark ? 44 : 38,
-                width: 'auto',
-                display: 'block',
-                objectFit: 'contain',
-                transition: 'height 0.35s var(--ease-out), filter 0.35s',
-                filter: dark ? 'brightness(1)' : 'none',
-                mixBlendMode: dark ? 'normal' : 'multiply',
-              }}
-              onError={e => {
-                e.target.style.display = 'none';
-                e.target.nextSibling.style.display = 'flex';
-              }}
-            />
-            <div style={{ display: 'none', flexDirection: 'column', lineHeight: 1.25 }}>
-              <span style={{
-                fontWeight: 800, fontSize: '0.9rem', letterSpacing: '-0.01em',
-                color: dark ? '#fff' : 'var(--text-primary)',
-                transition: 'color 0.3s',
-              }}>
-                Energie-Technik-Center
-              </span>
-              <span style={{
-                fontSize: '0.67rem', fontWeight: 500,
-                color: dark ? 'rgba(255,255,255,0.45)' : 'var(--text-muted)',
-                transition: 'color 0.3s',
-              }}>
-                Loy GmbH & Co. KG
-              </span>
-            </div>
-          </Link>
-
-          {/* Desktop Nav */}
+          {/* ── LEFT: desktop nav | mobile burger ── */}
           <nav style={{ display: 'flex', alignItems: 'center', gap: '0.1rem' }} className="nav-desktop">
             {navLinks.map(({ label, to }) => {
               const active = location.pathname === to;
@@ -138,13 +99,13 @@ export default function Navbar() {
             <a
               href="tel:+4998318809600"
               className="btn-primary"
-              style={{ marginLeft: '1rem', padding: '0.52rem 1.2rem', fontSize: '0.84rem', gap: '0.4rem' }}
+              style={{ marginLeft: '0.75rem', padding: '0.48rem 1.1rem', fontSize: '0.82rem', gap: '0.4rem' }}
             >
-              <Phone size={13} /> 09831 880960
+              <Phone size={12} /> 09831 880960
             </a>
           </nav>
 
-          {/* Burger */}
+          {/* Mobile burger (left on small screens) */}
           <button
             onClick={() => setOpen(v => !v)}
             className="nav-burger"
@@ -158,6 +119,15 @@ export default function Navbar() {
           >
             {open ? <X size={22} /> : <Menu size={22} />}
           </button>
+
+          {/* ── RIGHT: Logo (top-right corner) ── */}
+          <Link
+            to="/"
+            aria-label="Startseite – Energie-Technik-Center Loy"
+            style={{ display: 'flex', alignItems: 'center', flexShrink: 0, marginLeft: '1.5rem' }}
+          >
+            <LogoMark height={dark ? 44 : 36} dark={dark} />
+          </Link>
         </div>
 
         {/* Mobile Drawer */}

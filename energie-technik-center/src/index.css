@@ -10,6 +10,12 @@
   --secondary: #04080f;
   --secondary-mid: #0c1929;
 
+  /* Wave blue (from logo waves) */
+  --wave-blue: #1e9dd8;
+  --wave-blue-light: #38bdf8;
+  --wave-blue-dark: #0b76a8;
+  --wave-blue-bg: rgba(30,157,216,0.08);
+
   /* Text */
   --text-primary: #0d1117;
   --text-secondary: #64748b;

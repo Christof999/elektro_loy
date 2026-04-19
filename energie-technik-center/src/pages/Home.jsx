@@ -38,25 +38,25 @@ function HeroBg() {
         animation: 'orbFloat 18s ease-in-out infinite',
       }} />
 
-      {/* Secondary deep-blue orb */}
+      {/* Secondary wave-blue orb — matches logo wave color */}
       <div style={{
         position: 'absolute',
         bottom: '15%', left: '5%',
-        width: 520, height: 520,
+        width: 560, height: 560,
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(29,78,216,0.14) 0%, rgba(14,40,120,0.06) 45%, transparent 68%)',
-        filter: 'blur(64px)',
+        background: 'radial-gradient(circle, rgba(30,157,216,0.22) 0%, rgba(11,118,168,0.10) 42%, transparent 68%)',
+        filter: 'blur(60px)',
         animation: 'orbFloat 24s ease-in-out infinite reverse',
       }} />
 
-      {/* Accent warm fill top-left */}
+      {/* Accent — upper-left haze blending amber + blue */}
       <div style={{
         position: 'absolute',
         top: '-10%', left: '-5%',
-        width: 420, height: 420,
+        width: 440, height: 440,
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(251,191,36,0.06) 0%, transparent 60%)',
-        filter: 'blur(40px)',
+        background: 'radial-gradient(circle, rgba(30,157,216,0.09) 0%, rgba(251,191,36,0.04) 55%, transparent 70%)',
+        filter: 'blur(44px)',
         animation: 'orbFloat 14s ease-in-out infinite 3s',
       }} />
 
@@ -114,7 +114,8 @@ function ServiceRow({ num, title, description, to, isLast }) {
       <span style={{
         fontVariantNumeric: 'tabular-nums',
         fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.08em',
-        color: 'rgba(255,255,255,0.18)', minWidth: 28, flexShrink: 0,
+        color: num === '01' ? 'rgba(245,158,11,0.5)' : 'rgba(30,157,216,0.5)',
+        minWidth: 28, flexShrink: 0,
       }}>
         {num}
       </span>
@@ -219,7 +220,7 @@ export default function Home() {
           <div style={{ width: 1, height: 56, background: 'rgba(255,255,255,0.1)', borderRadius: 1, position: 'relative', overflow: 'hidden' }}>
             <div style={{
               position: 'absolute', left: 0, right: 0, height: '40%',
-              background: 'linear-gradient(to bottom, var(--primary), transparent)',
+              background: 'linear-gradient(to bottom, var(--wave-blue-light), var(--primary), transparent)',
               borderRadius: 1, animation: 'scrollLine 2s ease-in-out infinite',
             }} />
           </div>
@@ -234,7 +235,7 @@ export default function Home() {
       </section>
 
       {/* ═══════════════════ STATS STRIP ═══════════════════ */}
-      <div style={{ background: '#060e1c', borderTop: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+      <div style={{ background: '#060e1c', borderTop: '1px solid rgba(30,157,216,0.28)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
         <div className="container">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0 }}>
             {[
