@@ -59,7 +59,16 @@ export default function Navbar() {
           transition: 'padding 0.35s var(--ease-out)',
         }}>
 
-          {/* ── LEFT: desktop nav | mobile burger ── */}
+          {/* ── LEFT: Logo ── */}
+          <Link
+            to="/"
+            aria-label="Startseite – Energie-Technik-Center Loy"
+            style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}
+          >
+            <LogoMark height={dark ? 52 : 42} dark={dark} />
+          </Link>
+
+          {/* ── RIGHT: desktop nav | mobile burger ── */}
           <nav style={{ display: 'flex', alignItems: 'center', gap: '0.1rem' }} className="nav-desktop">
             {navLinks.map(({ label, to }) => {
               const active = location.pathname === to;
@@ -105,7 +114,7 @@ export default function Navbar() {
             </a>
           </nav>
 
-          {/* Mobile burger (left on small screens) */}
+          {/* Mobile burger (right side on small screens) */}
           <button
             onClick={() => setOpen(v => !v)}
             className="nav-burger"
@@ -119,15 +128,6 @@ export default function Navbar() {
           >
             {open ? <X size={22} /> : <Menu size={22} />}
           </button>
-
-          {/* ── RIGHT: Logo (top-right corner) ── */}
-          <Link
-            to="/"
-            aria-label="Startseite – Energie-Technik-Center Loy"
-            style={{ display: 'flex', alignItems: 'center', flexShrink: 0, marginLeft: '1.5rem' }}
-          >
-            <LogoMark height={dark ? 44 : 36} dark={dark} />
-          </Link>
         </div>
 
         {/* Mobile Drawer */}
