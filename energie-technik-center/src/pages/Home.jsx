@@ -1,7 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Star, Zap, Sun, Phone } from 'lucide-react';
-import HeroScene from '../components/HeroScene';
+import { ArrowRight, ArrowUpRight, Star, Phone } from 'lucide-react';
 import { useMeta } from '../hooks/useMeta';
 
 const reviews = [
@@ -15,64 +14,133 @@ function useReveal() {
     const els = document.querySelectorAll('.reveal');
     const io = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.12 });
+    }, { threshold: 0.1 });
     els.forEach(el => io.observe(el));
     return () => io.disconnect();
   }, []);
 }
 
-const DARK = 'linear-gradient(175deg, #060c18 0%, #091525 100%)';
-const DARK_SOLID = '#060c18';
-
-function ServiceCard({ to, icon: Icon, title, description }) {
+/* ── Cinematic orb background ── */
+function HeroBg() {
   return (
-    <Link to={to} style={{ textDecoration: 'none' }}>
-      <div
-        className="reveal"
-        style={{
-          background: 'rgba(255,255,255,0.04)',
-          border: '1px solid rgba(255,255,255,0.09)',
-          borderRadius: 18,
-          padding: '2.5rem',
-          cursor: 'pointer',
-          position: 'relative',
-          overflow: 'hidden',
-          height: '100%',
-          transition: 'background 240ms var(--ease-out), border-color 240ms var(--ease-out), transform 240ms var(--ease-out)',
-        }}
-        onMouseEnter={e => {
-          e.currentTarget.style.background = 'rgba(255,255,255,0.07)';
-          e.currentTarget.style.borderColor = 'rgba(245,158,11,0.25)';
-          e.currentTarget.style.transform = 'translateY(-3px)';
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
-          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.09)';
-          e.currentTarget.style.transform = 'translateY(0)';
-        }}
-      >
-        {/* Amber top accent */}
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, var(--primary-dark), var(--primary-light))' }} />
+    <div aria-hidden="true" style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+      {/* Deep base */}
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg, #02050d 0%, #060e1c 55%, #040a14 100%)' }} />
 
-        <div style={{
-          width: 52, height: 52, borderRadius: 14, marginBottom: '1.75rem',
-          background: 'rgba(245,158,11,0.1)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          border: '1px solid rgba(245,158,11,0.18)',
+      {/* Primary amber orb */}
+      <div style={{
+        position: 'absolute',
+        top: '8%', right: '12%',
+        width: 680, height: 680,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(245,158,11,0.18) 0%, rgba(245,158,11,0.07) 35%, transparent 68%)',
+        filter: 'blur(48px)',
+        animation: 'orbFloat 18s ease-in-out infinite',
+      }} />
+
+      {/* Secondary deep-blue orb */}
+      <div style={{
+        position: 'absolute',
+        bottom: '15%', left: '5%',
+        width: 520, height: 520,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(29,78,216,0.14) 0%, rgba(14,40,120,0.06) 45%, transparent 68%)',
+        filter: 'blur(64px)',
+        animation: 'orbFloat 24s ease-in-out infinite reverse',
+      }} />
+
+      {/* Accent warm fill top-left */}
+      <div style={{
+        position: 'absolute',
+        top: '-10%', left: '-5%',
+        width: 420, height: 420,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(251,191,36,0.06) 0%, transparent 60%)',
+        filter: 'blur(40px)',
+        animation: 'orbFloat 14s ease-in-out infinite 3s',
+      }} />
+
+      {/* Fine noise grain overlay */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")`,
+        opacity: 0.55,
+      }} />
+
+      {/* Subtle vignette */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: 'radial-gradient(ellipse 100% 100% at 50% 50%, transparent 55%, rgba(2,5,13,0.6) 100%)',
+      }} />
+    </div>
+  );
+}
+
+function ServiceRow({ num, title, description, to, isLast }) {
+  const rowRef = useRef(null);
+
+  const handleEnter = () => {
+    const el = rowRef.current;
+    if (!el) return;
+    const t = el.querySelector('.svc-title');
+    const a = el.querySelector('.svc-arrow');
+    if (t) t.style.color = 'var(--primary)';
+    if (a) { a.style.color = 'var(--primary)'; a.style.transform = 'translate(3px,-3px)'; }
+  };
+  const handleLeave = () => {
+    const el = rowRef.current;
+    if (!el) return;
+    const t = el.querySelector('.svc-title');
+    const a = el.querySelector('.svc-arrow');
+    if (t) t.style.color = '#fff';
+    if (a) { a.style.color = 'rgba(255,255,255,0.25)'; a.style.transform = 'translate(0,0)'; }
+  };
+
+  return (
+    <Link
+      to={to}
+      ref={rowRef}
+      className="reveal"
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+      style={{
+        display: 'flex', alignItems: 'center', gap: '2.5rem',
+        padding: '2.25rem 0',
+        borderBottom: isLast ? 'none' : '1px solid rgba(255,255,255,0.06)',
+        textDecoration: 'none', cursor: 'pointer',
+        transition: 'background 200ms var(--ease-out)',
+      }}
+    >
+      <span style={{
+        fontVariantNumeric: 'tabular-nums',
+        fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.08em',
+        color: 'rgba(255,255,255,0.18)', minWidth: 28, flexShrink: 0,
+      }}>
+        {num}
+      </span>
+
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div className="svc-title" style={{
+          fontSize: 'clamp(1.4rem, 2.4vw, 1.85rem)', fontWeight: 800,
+          color: '#fff', letterSpacing: '-0.025em', lineHeight: 1.1,
+          marginBottom: '0.55rem',
+          transition: 'color 200ms var(--ease-out)',
         }}>
-          <Icon size={23} color="var(--primary)" />
-        </div>
-
-        <h3 style={{ fontWeight: 800, fontSize: '1.3rem', marginBottom: '0.65rem', letterSpacing: '-0.015em', color: '#fff' }}>
           {title}
-        </h3>
-        <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.9rem', lineHeight: 1.72, marginBottom: '1.75rem' }}>
+        </div>
+        <p style={{ color: 'rgba(255,255,255,0.38)', fontSize: '0.88rem', lineHeight: 1.7, maxWidth: 560 }}>
           {description}
         </p>
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: 'var(--primary)', fontWeight: 600, fontSize: '0.875rem' }}>
-          Mehr erfahren <ArrowRight size={14} />
-        </span>
       </div>
+
+      <ArrowUpRight
+        className="svc-arrow"
+        size={22}
+        style={{
+          color: 'rgba(255,255,255,0.25)', flexShrink: 0,
+          transition: 'color 200ms var(--ease-out), transform 200ms var(--ease-out)',
+        }}
+      />
     </Link>
   );
 }
@@ -86,196 +154,160 @@ export default function Home() {
 
   return (
     <>
-      {/* ═══════════════════ DARK ZONE: Hero + Services ═══════════════════ */}
-      <div style={{ background: DARK }}>
+      {/* ═══════════════════ HERO ═══════════════════ */}
+      <section
+        aria-label="Hero"
+        style={{
+          minHeight: '100vh', position: 'relative', overflow: 'hidden',
+          display: 'flex', alignItems: 'flex-end',
+        }}
+      >
+        <HeroBg />
 
-        {/* ─────────────────── HERO ─────────────────── */}
-        <section aria-label="Hero" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
-          <HeroScene />
+        {/* Bottom-left hero content */}
+        <div className="container" style={{ position: 'relative', zIndex: 1, paddingBottom: '5.5rem', paddingTop: '10rem', width: '100%' }}>
+          <div style={{ maxWidth: 680 }}>
 
-          {/* Ambient glows */}
-          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none',
-            background: 'radial-gradient(ellipse 55% 70% at 85% 40%, rgba(245,158,11,0.05) 0%, transparent 65%)' }} />
-          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none',
-            background: 'radial-gradient(ellipse 40% 60% at 10% 75%, rgba(245,158,11,0.03) 0%, transparent 60%)' }} />
+            <div className="hero-enter-1" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.6rem' }}>
+              <div style={{ width: 20, height: 1.5, background: 'var(--primary)', borderRadius: 1 }} />
+              <span style={{
+                fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.13em',
+                textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)',
+              }}>
+                Energie-Technik-Center Loy · Muhr am See
+              </span>
+            </div>
 
-          <div className="container" style={{ position: 'relative', zIndex: 1, paddingTop: '7.5rem', paddingBottom: '5rem' }}>
-            <div className="hero-grid" style={{ display: 'grid', gap: '3rem', alignItems: 'center' }}>
+            <h1 className="hero-enter-2" style={{
+              fontSize: 'clamp(2.8rem, 6.5vw, 5.2rem)',
+              fontWeight: 900, color: '#fff', lineHeight: 1.03,
+              letterSpacing: '-0.035em', marginBottom: '1.6rem',
+            }}>
+              Energie & Elektro<br />
+              <span style={{ color: 'var(--primary)' }}>aus einer Hand.</span>
+            </h1>
 
-              {/* ── Text ── */}
-              <div>
-                <div className="hero-enter-1" style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1.4rem' }}>
-                  <div style={{ width: 28, height: 3, background: 'var(--primary)', borderRadius: 2 }} />
-                  <span style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)' }}>
-                    Ihr Energieexperte aus Muhr am See
-                  </span>
-                </div>
+            <p className="hero-enter-3" style={{
+              fontSize: 'clamp(0.95rem, 1.4vw, 1.08rem)',
+              color: 'rgba(255,255,255,0.42)',
+              lineHeight: 1.82, marginBottom: '2.5rem', maxWidth: 480,
+            }}>
+              Photovoltaik, Wärmepumpen, Elektroinstallation —
+              wir planen und betreuen Ihre Energielösung regional und persönlich.
+            </p>
 
-                <h1 className="hero-enter-2" style={{
-                  fontSize: 'clamp(2.5rem, 5.5vw, 4.2rem)',
-                  fontWeight: 900, color: '#fff', lineHeight: 1.07,
-                  marginBottom: '1.4rem', letterSpacing: '-0.03em',
-                }}>
-                  Energie & Elektro<br />
-                  <span style={{ color: 'var(--primary)' }}>aus einer Hand.</span>
-                </h1>
-
-                <p className="hero-enter-3" style={{
-                  fontSize: '1.05rem', color: 'rgba(255,255,255,0.5)',
-                  lineHeight: 1.78, marginBottom: '2.25rem', maxWidth: 460,
-                }}>
-                  Wir planen, installieren und betreuen Ihre Energielösung –
-                  von Photovoltaik bis zur Elektroinstallation, regional und persönlich.
-                </p>
-
-                <div className="hero-enter-4" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.85rem', marginBottom: '2.5rem' }}>
-                  <Link to="/kontakt" className="btn-primary" style={{ fontSize: '0.92rem', padding: '0.88rem 2rem' }}>
-                    Kostenlos anfragen <ArrowRight size={16} />
-                  </Link>
-                  <a href="tel:+4998318809600" className="btn-outline-white" style={{ fontSize: '0.92rem', padding: '0.88rem 1.8rem' }}>
-                    <Phone size={15} /> 09831 880960
-                  </a>
-                </div>
-
-                <div className="hero-enter-5" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.55rem' }}>
-                  {['Kostenlose Beratung vor Ort', 'Über 20 Jahre Erfahrung', 'Zuverlässig & termingerecht'].map(t => (
-                    <span key={t} style={{
-                      display: 'inline-flex', alignItems: 'center', gap: '0.45rem',
-                      padding: '0.32rem 0.85rem',
-                      background: 'rgba(255,255,255,0.04)',
-                      border: '1px solid rgba(255,255,255,0.08)',
-                      borderRadius: 100, fontSize: '0.78rem', fontWeight: 500,
-                      color: 'rgba(255,255,255,0.5)',
-                    }}>
-                      <span style={{ width: 5, height: 5, background: 'var(--primary)', borderRadius: '50%', flexShrink: 0 }} />
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* ── Glassmorphic Card (Desktop) ── */}
-              <div className="hero-anim hero-enter-card" style={{ maxWidth: 300 }}>
-                <div style={{
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  borderRadius: 20, padding: '1.75rem',
-                  backdropFilter: 'blur(24px)',
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '1.4rem' }}>
-                    <span style={{ fontSize: '2.6rem', fontWeight: 900, color: '#fff', letterSpacing: '-0.04em', lineHeight: 1 }}>4,4</span>
-                    <div>
-                      <div style={{ display: 'flex', gap: 3, marginBottom: '0.25rem' }}>
-                        {[1,2,3,4,5].map(s => (
-                          <Star key={s} size={13}
-                            fill={s <= 4 ? '#f59e0b' : 'none'}
-                            stroke="#f59e0b"
-                            strokeWidth={s <= 4 ? 0 : 1.5}
-                          />
-                        ))}
-                      </div>
-                      <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.38)', fontWeight: 500 }}>
-                        29 Google-Rezensionen
-                      </span>
-                    </div>
-                  </div>
-
-                  <div style={{ height: 1, background: 'rgba(255,255,255,0.07)', marginBottom: '1.25rem' }} />
-
-                  {[
-                    { val: '20+',      label: 'Jahre Erfahrung' },
-                    { val: '500+',     label: 'Projekte' },
-                    { val: 'Regional', label: 'Ansbach & Umgebung' },
-                  ].map(({ val, label }) => (
-                    <div key={label} style={{
-                      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                      paddingBottom: '0.7rem', marginBottom: '0.7rem',
-                      borderBottom: '1px solid rgba(255,255,255,0.06)',
-                    }}>
-                      <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.35)', fontWeight: 500 }}>{label}</span>
-                      <span style={{ fontSize: '0.88rem', color: 'rgba(255,255,255,0.8)', fontWeight: 700 }}>{val}</span>
-                    </div>
-                  ))}
-
-                  <Link to="/kontakt" style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
-                    marginTop: '0.5rem', padding: '0.7rem',
-                    background: 'var(--primary)', color: '#fff',
-                    borderRadius: 10, fontWeight: 600, fontSize: '0.85rem', textDecoration: 'none',
-                    transition: 'background 150ms var(--ease-out), transform 150ms var(--ease-out)',
-                  }}
-                    onMouseEnter={e => { e.currentTarget.style.background = 'var(--primary-dark)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = 'var(--primary)'; e.currentTarget.style.transform = 'translateY(0)'; }}
-                  >
-                    Jetzt anfragen <ArrowRight size={14} />
-                  </Link>
-                </div>
-              </div>
-
+            <div className="hero-enter-4" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+              <Link to="/kontakt" className="btn-primary" style={{ fontSize: '0.9rem', padding: '0.85rem 1.9rem' }}>
+                Kostenlos anfragen <ArrowRight size={15} />
+              </Link>
+              <a href="tel:+4998318809600" className="btn-outline-white" style={{ fontSize: '0.9rem', padding: '0.85rem 1.7rem' }}>
+                <Phone size={14} /> 09831 880960
+              </a>
             </div>
           </div>
-        </section>
+        </div>
 
-        {/* ─────────────────── LEISTUNGEN ─────────────────── */}
-        <section aria-label="Unsere Bereiche" style={{ padding: '5.5rem 0 6.5rem', position: 'relative' }}>
-          {/* Subtle separator line from hero */}
-          <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '90%', maxWidth: 900, height: 1, background: 'rgba(255,255,255,0.05)' }} />
+        {/* Scroll indicator — bottom right */}
+        <div className="hero-enter-5" style={{
+          position: 'absolute', bottom: '2.5rem', right: '2.5rem',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.6rem',
+          zIndex: 2,
+        }}>
+          <span style={{ fontSize: '0.6rem', fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.22)', writingMode: 'vertical-rl' }}>
+            Scroll
+          </span>
+          <div style={{ width: 1, height: 56, background: 'rgba(255,255,255,0.1)', borderRadius: 1, position: 'relative', overflow: 'hidden' }}>
+            <div style={{
+              position: 'absolute', left: 0, right: 0, height: '40%',
+              background: 'linear-gradient(to bottom, var(--primary), transparent)',
+              borderRadius: 1, animation: 'scrollLine 2s ease-in-out infinite',
+            }} />
+          </div>
+        </div>
 
-          <div className="container">
-            <div style={{ maxWidth: 560, marginBottom: '3.5rem' }} className="reveal">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.9rem' }}>
-                <div style={{ width: 28, height: 3, background: 'var(--primary)', borderRadius: 2 }} />
-                <span style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)' }}>
-                  Unsere Bereiche
-                </span>
+        {/* Bottom gradient fade-into-dark */}
+        <div style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0, height: 160,
+          background: 'linear-gradient(to top, #060e1c, transparent)',
+          pointerEvents: 'none', zIndex: 1,
+        }} />
+      </section>
+
+      {/* ═══════════════════ STATS STRIP ═══════════════════ */}
+      <div style={{ background: '#060e1c', borderTop: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+        <div className="container">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0 }}>
+            {[
+              { val: '20+',  label: 'Jahre Erfahrung' },
+              { val: '500+', label: 'Projekte umgesetzt' },
+              { val: '4,4★', label: 'Google-Bewertung' },
+            ].map(({ val, label }, i) => (
+              <div key={label} style={{
+                padding: '2rem 1.5rem',
+                borderRight: i < 2 ? '1px solid rgba(255,255,255,0.05)' : 'none',
+                textAlign: 'center',
+              }}>
+                <div style={{ fontWeight: 900, fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', color: '#fff', letterSpacing: '-0.04em', lineHeight: 1, marginBottom: '0.35rem' }}>
+                  {val}
+                </div>
+                <div style={{ fontSize: '0.75rem', fontWeight: 500, color: 'rgba(255,255,255,0.32)', letterSpacing: '0.03em' }}>
+                  {label}
+                </div>
               </div>
-              <h2 style={{ fontSize: 'clamp(1.75rem, 3vw, 2.5rem)', fontWeight: 800, marginBottom: '0.75rem', letterSpacing: '-0.025em', color: '#fff' }}>
-                Zwei Bereiche –<br />ein Ansprechpartner
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ═══════════════════ LEISTUNGEN ═══════════════════ */}
+      <section aria-label="Unsere Bereiche" style={{ background: '#060e1c', padding: '6rem 0 7rem' }}>
+        <div className="container">
+          <div className="reveal" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem', marginBottom: '1rem' }}>
+            <div>
+              <div className="section-eyebrow section-eyebrow-white" style={{ marginBottom: '0.8rem' }}><span>Leistungen</span></div>
+              <h2 style={{ fontSize: 'clamp(1.6rem, 2.8vw, 2.4rem)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em' }}>
+                Was wir für Sie leisten
               </h2>
-              <p style={{ color: 'rgba(255,255,255,0.42)', fontSize: '0.97rem', lineHeight: 1.75 }}>
-                Egal ob Steckdose oder Solaranlage – wir sind Ihr Full-Service-Partner
-                für alles rund um Elektro und Energie.
-              </p>
-            </div>
-
-            <div className="stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.25rem' }}>
-              <ServiceCard
-                to="/elektrotechnik"
-                icon={Zap}
-                title="Elektrotechnik"
-                description="Elektroinstallation, Smart Home, Zähleranlagen, Prüfungen und Notfalldienst – normgerecht und sorgfältig ausgeführt."
-              />
-              <ServiceCard
-                to="/energietechnik"
-                icon={Sun}
-                title="Energietechnik"
-                description="Photovoltaik, Stromspeicher, Wärmepumpen und E-Mobilität – wir machen Ihr Zuhause fit für die Energiezukunft."
-              />
             </div>
           </div>
-        </section>
 
-      </div>{/* ═══ end dark zone ═══ */}
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', marginTop: '1.5rem' }}>
+            <ServiceRow
+              num="01"
+              to="/elektrotechnik"
+              title="Elektrotechnik"
+              description="Elektroinstallation, Smart Home, Zähleranlagen, Prüfungen und Notfalldienst – normgerecht und sorgfältig ausgeführt."
+            />
+            <ServiceRow
+              num="02"
+              to="/energietechnik"
+              title="Energietechnik"
+              description="Photovoltaik, Stromspeicher, Wärmepumpen und E-Mobilität – wir machen Ihr Zuhause fit für die Energiezukunft."
+              isLast
+            />
+          </div>
+        </div>
+      </section>
 
-      {/* ─────────────────── GRADIENT BRIDGE ─────────────────── */}
-      <div style={{ height: 140, background: `linear-gradient(to bottom, ${DARK_SOLID}, var(--bg-light))`, pointerEvents: 'none' }} />
+      {/* Gradient bridge dark → light */}
+      <div style={{ height: 120, background: 'linear-gradient(to bottom, #060e1c, var(--bg-light))', pointerEvents: 'none' }} />
 
-      {/* ─────────────────── ÜBER UNS ─────────────────── */}
+      {/* ═══════════════════ ÜBER UNS ═══════════════════ */}
       <section aria-label="Über uns" className="section-sm" style={{ background: 'var(--bg-light)', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem', alignItems: 'center' }}>
 
             <div className="reveal">
-              <div className="section-eyebrow"><span>Über uns</span></div>
-              <h2 style={{ fontSize: 'clamp(1.65rem, 2.8vw, 2.3rem)', fontWeight: 800, marginBottom: '1.1rem', letterSpacing: '-0.025em' }}>
+              <div className="section-eyebrow" style={{ marginBottom: '1rem' }}><span>Über uns</span></div>
+              <h2 style={{ fontSize: 'clamp(1.65rem, 2.8vw, 2.3rem)', fontWeight: 800, marginBottom: '1.2rem', letterSpacing: '-0.025em' }}>
                 Inhabergeführt.<br />Regional. Verlässlich.
               </h2>
-              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.82, marginBottom: '0.85rem', fontSize: '0.95rem' }}>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.82, marginBottom: '0.9rem', fontSize: '0.95rem' }}>
                 Als Familienunternehmen aus Muhr am See stehen wir für persönliche Beratung und
                 handwerkliche Sorgfalt. Seit über 20 Jahren sind wir in der Region Ansbach,
                 Gunzenhausen, Nürnberg und Ingolstadt für unsere Kunden im Einsatz.
               </p>
-              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.82, marginBottom: '2rem', fontSize: '0.95rem' }}>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.82, marginBottom: '2.2rem', fontSize: '0.95rem' }}>
                 Kein Callcenter, keine anonymen Strukturen – bei uns sprechen Sie direkt mit dem
                 Team, das Ihr Projekt auch umsetzt.
               </p>
@@ -309,12 +341,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─────────────────── KUNDENSTIMMEN ─────────────────── */}
+      {/* ═══════════════════ KUNDENSTIMMEN ═══════════════════ */}
       <section aria-label="Kundenstimmen" className="section" style={{ background: 'var(--bg-white)' }}>
         <div className="container">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '3rem', flexWrap: 'wrap', gap: '1rem' }} className="reveal">
             <div>
-              <div className="section-eyebrow"><span>Kundenstimmen</span></div>
+              <div className="section-eyebrow" style={{ marginBottom: '0.8rem' }}><span>Kundenstimmen</span></div>
               <h2 style={{ fontSize: 'clamp(1.6rem, 2.8vw, 2.3rem)', fontWeight: 800, letterSpacing: '-0.025em' }}>
                 Das sagen unsere Kunden
               </h2>
@@ -371,41 +403,39 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─────────────────── CTA ─────────────────── */}
+      {/* ═══════════════════ CTA ═══════════════════ */}
       <section aria-label="Kontaktaufforderung" style={{
         background: 'linear-gradient(150deg, #060c18 0%, #0c1d35 100%)',
-        padding: '5.5rem 0', position: 'relative', overflow: 'hidden',
+        padding: '6rem 0', position: 'relative', overflow: 'hidden',
       }}>
-        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: 'radial-gradient(ellipse 60% 100% at 50% 110%, rgba(245,158,11,0.09) 0%, transparent 55%)' }} />
-        <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.025, pointerEvents: 'none' }} aria-hidden="true">
-          <defs>
-            <pattern id="cta-grid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#cta-grid)" />
-        </svg>
+        {/* Ambient orb in CTA */}
+        <div aria-hidden="true" style={{
+          position: 'absolute', top: '50%', left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 600, height: 600, borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(245,158,11,0.09) 0%, transparent 60%)',
+          filter: 'blur(60px)', pointerEvents: 'none',
+        }} />
 
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ maxWidth: 520, margin: '0 auto', textAlign: 'center' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
-              <div style={{ width: 32, height: 3, background: 'var(--primary)', borderRadius: 2 }} />
-            </div>
-            <h2 style={{ color: '#fff', fontWeight: 800, fontSize: 'clamp(1.7rem, 3.2vw, 2.4rem)', marginBottom: '0.9rem', letterSpacing: '-0.03em' }}>
-              Bereit für Ihr Projekt?
-            </h2>
-            <p style={{ color: 'rgba(255,255,255,0.42)', marginBottom: '2.25rem', fontSize: '0.97rem', lineHeight: 1.75 }}>
-              Wir beraten Sie kostenlos und unverbindlich –
-              direkt vor Ort in der Region Ansbach und Umgebung.
-            </p>
-            <div style={{ display: 'flex', gap: '0.85rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Link to="/kontakt" className="btn-primary" style={{ fontSize: '0.93rem', padding: '0.9rem 2.1rem' }}>
-                Jetzt Anfrage stellen <ArrowRight size={16} />
-              </Link>
-              <a href="tel:+4998318809600" className="btn-outline-white" style={{ fontSize: '0.93rem' }}>
-                <Phone size={15} /> 09831 880960
-              </a>
+          <div style={{ maxWidth: 540, margin: '0 auto', textAlign: 'center' }}>
+            <div className="reveal">
+              <div className="section-eyebrow section-eyebrow-white" style={{ justifyContent: 'center', marginBottom: '1.25rem' }}><span>Kontakt</span></div>
+              <h2 style={{ color: '#fff', fontWeight: 900, fontSize: 'clamp(1.9rem, 3.5vw, 2.8rem)', marginBottom: '1rem', letterSpacing: '-0.035em' }}>
+                Bereit für Ihr Projekt?
+              </h2>
+              <p style={{ color: 'rgba(255,255,255,0.4)', marginBottom: '2.5rem', fontSize: '0.97rem', lineHeight: 1.78 }}>
+                Wir beraten Sie kostenlos und unverbindlich –
+                direkt vor Ort in der Region Ansbach und Umgebung.
+              </p>
+              <div style={{ display: 'flex', gap: '0.85rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <Link to="/kontakt" className="btn-primary" style={{ fontSize: '0.93rem', padding: '0.9rem 2.1rem' }}>
+                  Jetzt Anfrage stellen <ArrowRight size={16} />
+                </Link>
+                <a href="tel:+4998318809600" className="btn-outline-white" style={{ fontSize: '0.93rem' }}>
+                  <Phone size={15} /> 09831 880960
+                </a>
+              </div>
             </div>
           </div>
         </div>
