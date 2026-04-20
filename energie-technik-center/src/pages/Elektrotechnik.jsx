@@ -427,35 +427,35 @@ function BulletListe({ items, dark }) {
   );
 }
 
-/* Scroll-Journey: verfolgt Scroll-Fortschritt innerhalb eines Wrappers */
-function useScrollJourney(total) {
-  const wrapperRef = useRef(null);
-  const [step, setStep] = useState(0);
-
+/* Parallax: bewegt .journey-szene-Elemente leicht langsamer als Scroll */
+function useJourneyParallax() {
   useEffect(() => {
-    const onScroll = () => {
-      const el = wrapperRef.current;
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const scrolled = Math.max(0, -rect.top);
-      const scrollable = el.scrollHeight - window.innerHeight;
-      const progress = Math.min(1, scrolled / scrollable);
-      setStep(Math.min(total - 1, Math.floor(progress * total)));
+    const move = () => {
+      document.querySelectorAll('.journey-szene').forEach(el => {
+        const rect = el.getBoundingClientRect();
+        const fromCenter = rect.top + rect.height / 2 - window.innerHeight / 2;
+        el.style.setProperty('--par', `${fromCenter * 0.07}px`);
+        if (el.classList.contains('entered')) {
+          el.style.transform = `translateY(${fromCenter * 0.07}px) scale(1)`;
+        }
+      });
     };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [total]);
-
-  return { wrapperRef, step };
+    window.addEventListener('scroll', move, { passive: true });
+    return () => window.removeEventListener('scroll', move);
+  }, []);
 }
 
 function useReveal() {
   useEffect(() => {
-    const els = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+    const els = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .journey-panel');
     const io = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.1 });
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          e.target.classList.add('entered');
+        }
+      });
+    }, { threshold: 0.18 });
     els.forEach(el => io.observe(el));
     return () => io.disconnect();
   }, []);
@@ -463,7 +463,7 @@ function useReveal() {
 
 export default function Elektrotechnik() {
   useReveal();
-  const { wrapperRef: journeyRef, step: journeyStep } = useScrollJourney(4);
+  useJourneyParallax();
   useMeta({
     title: 'Elektrotechnik',
     description: 'Elektroinstallation, Smart Home, Sicherheitstechnik und Prüfungen – normgerecht und zuverlässig in der Region Ansbach. Jetzt kostenlos anfragen.',
@@ -507,186 +507,124 @@ export default function Elektrotechnik() {
         </div>
       </section>
 
-      {/* ── Scroll Journey: 4 Leistungsbereiche ── */}
-      <div ref={journeyRef} style={{ position:'relative', height:'400vh' }} aria-label="Leistungen Elektrotechnik">
-        <div style={{ position:'sticky', top:0, height:'100vh', overflow:'hidden' }}>
+      {/* ── Journey: 4 Leistungsbereiche – vertikale Kamerafahrt ── */}
 
-          {/* Raum-Indikator oben */}
-          <div style={{
-            position:'absolute', top:'1.5rem', left:'50%', transform:'translateX(-50%)',
-            zIndex:20, display:'flex', alignItems:'center', gap:'0.5rem',
-            background:'rgba(0,0,0,0.35)', backdropFilter:'blur(8px)',
-            borderRadius:99, padding:'0.4rem 1rem', border:'1px solid rgba(255,255,255,0.1)',
-          }}>
-            {[
-              { label:'Keller', icon:Zap },
-              { label:'Wohnraum', icon:Home },
-              { label:'Außen', icon:Shield },
-              { label:'Technik', icon:Wrench },
-            ].map(({ label, icon: Icon }, i) => (
-              <div key={i} style={{ display:'flex', alignItems:'center', gap:'0.3rem',
-                opacity: i === journeyStep ? 1 : 0.35,
-                transition:'opacity 0.4s ease',
-                fontSize:'0.68rem', fontWeight:600, letterSpacing:'0.06em',
-                textTransform:'uppercase', color:'#fff' }}>
-                {i > 0 && <span style={{ opacity:0.3, marginRight:'0.2rem' }}>›</span>}
-                <Icon size={10}/> {label}
+      {/* 1 – Elektroinstallation */}
+      <section className="journey-panel" aria-label="Elektroinstallation"
+        style={{ background:'#0a1520' }}>
+        <div className="container" style={{ width:'100%' }}>
+          <div style={{ display:'flex', flexWrap:'wrap', gap:'3rem', alignItems:'center' }}>
+            <div className="journey-text" style={{ flex:'1 1 260px', minWidth:0 }}>
+              <div style={{ fontSize:'0.7rem', fontWeight:600, letterSpacing:'0.1em',
+                textTransform:'uppercase', color:'rgba(255,255,255,0.35)',
+                marginBottom:'0.85rem', display:'flex', alignItems:'center', gap:'0.4rem' }}>
+                <Zap size={11}/> Keller &amp; Verteilung
               </div>
-            ))}
-          </div>
-
-          {/* Panel 0 – Elektroinstallation */}
-          <div style={{
-            position:'absolute', inset:0, display:'flex', alignItems:'center',
-            background:'#0a1520',
-            transform:`translateX(${(0 - journeyStep) * 100}%)`,
-            transition:'transform 0.9s cubic-bezier(0.76,0,0.24,1)',
-          }}>
-            <div className="container" style={{ width:'100%' }}>
-              <div style={{ display:'flex', flexWrap:'wrap', gap:'3rem', alignItems:'center' }}>
-                <div style={{ flex:'1 1 260px', minWidth:0 }}>
-                  <div style={{ fontSize:'0.7rem', fontWeight:600, letterSpacing:'0.1em',
-                    textTransform:'uppercase', color:'rgba(255,255,255,0.35)',
-                    marginBottom:'0.85rem', display:'flex', alignItems:'center', gap:'0.4rem' }}>
-                    <Zap size={11}/> Keller &amp; Verteilung
-                  </div>
-                  <h2 style={{ fontSize:'clamp(1.6rem,2.6vw,2.2rem)', fontWeight:800,
-                    lineHeight:1.1, letterSpacing:'-0.02em', marginBottom:'0.9rem', color:'#fff' }}>
-                    Elektroinstallation
-                  </h2>
-                  <p style={{ fontSize:'0.92rem', lineHeight:1.7, marginBottom:'1.25rem',
-                    color:'rgba(255,255,255,0.5)' }}>
-                    Neubau, Sanierung oder Erweiterung – wir installieren normgerecht und sauber.
-                    Vom Zählerkasten bis zur letzten Steckdose.
-                  </p>
-                  <BulletListe dark items={['Unterverteilungen & Zähleranlagen','Steckdosen & Leitungsverlegung','Beleuchtungsinstallation','Außenanlagen & Gartenbeleuchtung']}/>
-                </div>
-                <div style={{ flex:'1 1 340px', minWidth:0 }}><InstallationSzene/></div>
-              </div>
+              <h2 style={{ fontSize:'clamp(1.6rem,2.6vw,2.2rem)', fontWeight:800,
+                lineHeight:1.1, letterSpacing:'-0.02em', marginBottom:'0.9rem', color:'#fff' }}>
+                Elektroinstallation
+              </h2>
+              <p style={{ fontSize:'0.92rem', lineHeight:1.7, marginBottom:'1.25rem',
+                color:'rgba(255,255,255,0.5)' }}>
+                Neubau, Sanierung oder Erweiterung – wir installieren normgerecht und sauber.
+                Vom Zählerkasten bis zur letzten Steckdose.
+              </p>
+              <BulletListe dark items={['Unterverteilungen & Zähleranlagen','Steckdosen & Leitungsverlegung','Beleuchtungsinstallation','Außenanlagen & Gartenbeleuchtung']}/>
+            </div>
+            <div className="journey-szene" style={{ flex:'1 1 340px', minWidth:0 }}>
+              <InstallationSzene/>
             </div>
           </div>
-
-          {/* Panel 1 – Smart Home */}
-          <div style={{
-            position:'absolute', inset:0, display:'flex', alignItems:'center',
-            background:'#f5f0e8',
-            transform:`translateX(${(1 - journeyStep) * 100}%)`,
-            transition:'transform 0.9s cubic-bezier(0.76,0,0.24,1)',
-          }}>
-            <div className="container" style={{ width:'100%' }}>
-              <div style={{ display:'flex', flexWrap:'wrap', gap:'3rem', alignItems:'center', flexDirection:'row-reverse' }}>
-                <div style={{ flex:'1 1 260px', minWidth:0 }}>
-                  <div style={{ fontSize:'0.7rem', fontWeight:600, letterSpacing:'0.1em',
-                    textTransform:'uppercase', color:'var(--text-secondary)',
-                    marginBottom:'0.85rem', display:'flex', alignItems:'center', gap:'0.4rem' }}>
-                    <Home size={11} color="var(--primary-dark)"/> Wohnbereich
-                  </div>
-                  <h2 style={{ fontSize:'clamp(1.6rem,2.6vw,2.2rem)', fontWeight:800,
-                    lineHeight:1.1, letterSpacing:'-0.02em', marginBottom:'0.9rem',
-                    color:'var(--text-primary)' }}>
-                    Smart Home
-                  </h2>
-                  <p style={{ fontSize:'0.92rem', lineHeight:1.7, marginBottom:'1.25rem',
-                    color:'var(--text-secondary)' }}>
-                    Intelligente Haustechnik für mehr Komfort, Sicherheit und Energieeinsparung.
-                    Wir planen und installieren Ihr Smart-Home-System.
-                  </p>
-                  <BulletListe items={['KNX / Busch-Jaeger / Gira','Automatische Beschattung','Sprachsteuerung (Alexa, Google)','Einbruchmeldesysteme']}/>
-                </div>
-                <div style={{ flex:'1 1 340px', minWidth:0 }}><SmartHomeSzene/></div>
-              </div>
-            </div>
-          </div>
-
-          {/* Panel 2 – Sicherheitstechnik */}
-          <div style={{
-            position:'absolute', inset:0, display:'flex', alignItems:'center',
-            background:'#060c18',
-            transform:`translateX(${(2 - journeyStep) * 100}%)`,
-            transition:'transform 0.9s cubic-bezier(0.76,0,0.24,1)',
-          }}>
-            <div className="container" style={{ width:'100%' }}>
-              <div style={{ display:'flex', flexWrap:'wrap', gap:'3rem', alignItems:'center' }}>
-                <div style={{ flex:'1 1 260px', minWidth:0 }}>
-                  <div style={{ fontSize:'0.7rem', fontWeight:600, letterSpacing:'0.1em',
-                    textTransform:'uppercase', color:'rgba(255,255,255,0.35)',
-                    marginBottom:'0.85rem', display:'flex', alignItems:'center', gap:'0.4rem' }}>
-                    <Shield size={11}/> Außenbereich
-                  </div>
-                  <h2 style={{ fontSize:'clamp(1.6rem,2.6vw,2.2rem)', fontWeight:800,
-                    lineHeight:1.1, letterSpacing:'-0.02em', marginBottom:'0.9rem', color:'#fff' }}>
-                    Sicherheitstechnik
-                  </h2>
-                  <p style={{ fontSize:'0.92rem', lineHeight:1.7, marginBottom:'1.25rem',
-                    color:'rgba(255,255,255,0.5)' }}>
-                    Schutz für Ihr Zuhause und Ihren Betrieb: Einbruchmeldeanlagen,
-                    Videoüberwachung und Brandschutz aus einer Hand.
-                  </p>
-                  <BulletListe dark items={['Einbruchmeldeanlagen','Videoüberwachung','Rauchmeldeanlagen','Zutrittskontrolle']}/>
-                </div>
-                <div style={{ flex:'1 1 340px', minWidth:0 }}><SicherheitSzene/></div>
-              </div>
-            </div>
-          </div>
-
-          {/* Panel 3 – Prüfungen & Wartung */}
-          <div style={{
-            position:'absolute', inset:0, display:'flex', alignItems:'center',
-            background:'#0e1723',
-            transform:`translateX(${(3 - journeyStep) * 100}%)`,
-            transition:'transform 0.9s cubic-bezier(0.76,0,0.24,1)',
-          }}>
-            <div className="container" style={{ width:'100%' }}>
-              <div style={{ display:'flex', flexWrap:'wrap', gap:'3rem', alignItems:'center', flexDirection:'row-reverse' }}>
-                <div style={{ flex:'1 1 260px', minWidth:0 }}>
-                  <div style={{ fontSize:'0.7rem', fontWeight:600, letterSpacing:'0.1em',
-                    textTransform:'uppercase', color:'rgba(255,255,255,0.35)',
-                    marginBottom:'0.85rem', display:'flex', alignItems:'center', gap:'0.4rem' }}>
-                    <Wrench size={11}/> Technikraum
-                  </div>
-                  <h2 style={{ fontSize:'clamp(1.6rem,2.6vw,2.2rem)', fontWeight:800,
-                    lineHeight:1.1, letterSpacing:'-0.02em', marginBottom:'0.9rem', color:'#fff' }}>
-                    Prüfungen &amp; Wartung
-                  </h2>
-                  <p style={{ fontSize:'0.92rem', lineHeight:1.7, marginBottom:'1.25rem',
-                    color:'rgba(255,255,255,0.5)' }}>
-                    Regelmäßige Prüfungen nach DGUV und VDE sichern den sicheren Betrieb
-                    Ihrer Anlagen und sind oft gesetzlich vorgeschrieben.
-                  </p>
-                  <BulletListe dark items={['E-Check','DGUV V3 Prüfungen','Prüfung ortsveränderlicher Geräte','Anlagendokumentation']}/>
-                </div>
-                <div style={{ flex:'1 1 340px', minWidth:0 }}><PruefungSzene/></div>
-              </div>
-            </div>
-          </div>
-
-          {/* Fortschritts-Dots unten */}
-          <div style={{
-            position:'absolute', bottom:'2rem', left:'50%', transform:'translateX(-50%)',
-            display:'flex', gap:'0.5rem', zIndex:20,
-          }}>
-            {['Elektroinstallation','Smart Home','Sicherheit','Prüfung'].map((label, i) => (
-              <div key={i} title={label} style={{
-                width: i === journeyStep ? 28 : 8,
-                height: 8, borderRadius: 4,
-                background: i === journeyStep ? 'var(--primary)' : 'rgba(255,255,255,0.28)',
-                transition: 'all 0.35s ease',
-              }}/>
-            ))}
-          </div>
-
-          {/* Scroll-Hinweis */}
-          {journeyStep < 3 && (
-            <div style={{
-              position:'absolute', bottom:'2rem', right:'2rem', zIndex:20,
-              fontSize:'0.68rem', color:'rgba(255,255,255,0.3)',
-              letterSpacing:'0.08em', textTransform:'uppercase',
-            }}>
-              scroll ↓
-            </div>
-          )}
         </div>
-      </div>
+      </section>
+
+      {/* 2 – Smart Home */}
+      <section className="journey-panel" aria-label="Smart Home"
+        style={{ background:'#f5f0e8' }}>
+        <div className="container" style={{ width:'100%' }}>
+          <div style={{ display:'flex', flexWrap:'wrap', gap:'3rem', alignItems:'center', flexDirection:'row-reverse' }}>
+            <div className="journey-text" style={{ flex:'1 1 260px', minWidth:0 }}>
+              <div style={{ fontSize:'0.7rem', fontWeight:600, letterSpacing:'0.1em',
+                textTransform:'uppercase', color:'var(--text-secondary)',
+                marginBottom:'0.85rem', display:'flex', alignItems:'center', gap:'0.4rem' }}>
+                <Home size={11} color="var(--primary-dark)"/> Wohnbereich
+              </div>
+              <h2 style={{ fontSize:'clamp(1.6rem,2.6vw,2.2rem)', fontWeight:800,
+                lineHeight:1.1, letterSpacing:'-0.02em', marginBottom:'0.9rem',
+                color:'var(--text-primary)' }}>
+                Smart Home
+              </h2>
+              <p style={{ fontSize:'0.92rem', lineHeight:1.7, marginBottom:'1.25rem',
+                color:'var(--text-secondary)' }}>
+                Intelligente Haustechnik für mehr Komfort, Sicherheit und Energieeinsparung.
+                Wir planen und installieren Ihr Smart-Home-System.
+              </p>
+              <BulletListe items={['KNX / Busch-Jaeger / Gira','Automatische Beschattung','Sprachsteuerung (Alexa, Google)','Einbruchmeldesysteme']}/>
+            </div>
+            <div className="journey-szene" style={{ flex:'1 1 340px', minWidth:0 }}>
+              <SmartHomeSzene/>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3 – Sicherheitstechnik */}
+      <section className="journey-panel" aria-label="Sicherheitstechnik"
+        style={{ background:'#060c18' }}>
+        <div className="container" style={{ width:'100%' }}>
+          <div style={{ display:'flex', flexWrap:'wrap', gap:'3rem', alignItems:'center' }}>
+            <div className="journey-text" style={{ flex:'1 1 260px', minWidth:0 }}>
+              <div style={{ fontSize:'0.7rem', fontWeight:600, letterSpacing:'0.1em',
+                textTransform:'uppercase', color:'rgba(255,255,255,0.35)',
+                marginBottom:'0.85rem', display:'flex', alignItems:'center', gap:'0.4rem' }}>
+                <Shield size={11}/> Außenbereich
+              </div>
+              <h2 style={{ fontSize:'clamp(1.6rem,2.6vw,2.2rem)', fontWeight:800,
+                lineHeight:1.1, letterSpacing:'-0.02em', marginBottom:'0.9rem', color:'#fff' }}>
+                Sicherheitstechnik
+              </h2>
+              <p style={{ fontSize:'0.92rem', lineHeight:1.7, marginBottom:'1.25rem',
+                color:'rgba(255,255,255,0.5)' }}>
+                Schutz für Ihr Zuhause und Ihren Betrieb: Einbruchmeldeanlagen,
+                Videoüberwachung und Brandschutz aus einer Hand.
+              </p>
+              <BulletListe dark items={['Einbruchmeldeanlagen','Videoüberwachung','Rauchmeldeanlagen','Zutrittskontrolle']}/>
+            </div>
+            <div className="journey-szene" style={{ flex:'1 1 340px', minWidth:0 }}>
+              <SicherheitSzene/>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4 – Prüfungen & Wartung */}
+      <section className="journey-panel" aria-label="Prüfungen und Wartung"
+        style={{ background:'#0e1723' }}>
+        <div className="container" style={{ width:'100%' }}>
+          <div style={{ display:'flex', flexWrap:'wrap', gap:'3rem', alignItems:'center', flexDirection:'row-reverse' }}>
+            <div className="journey-text" style={{ flex:'1 1 260px', minWidth:0 }}>
+              <div style={{ fontSize:'0.7rem', fontWeight:600, letterSpacing:'0.1em',
+                textTransform:'uppercase', color:'rgba(255,255,255,0.35)',
+                marginBottom:'0.85rem', display:'flex', alignItems:'center', gap:'0.4rem' }}>
+                <Wrench size={11}/> Technikraum
+              </div>
+              <h2 style={{ fontSize:'clamp(1.6rem,2.6vw,2.2rem)', fontWeight:800,
+                lineHeight:1.1, letterSpacing:'-0.02em', marginBottom:'0.9rem', color:'#fff' }}>
+                Prüfungen &amp; Wartung
+              </h2>
+              <p style={{ fontSize:'0.92rem', lineHeight:1.7, marginBottom:'1.25rem',
+                color:'rgba(255,255,255,0.5)' }}>
+                Regelmäßige Prüfungen nach DGUV und VDE sichern den sicheren Betrieb
+                Ihrer Anlagen und sind oft gesetzlich vorgeschrieben.
+              </p>
+              <BulletListe dark items={['E-Check','DGUV V3 Prüfungen','Prüfung ortsveränderlicher Geräte','Anlagendokumentation']}/>
+            </div>
+            <div className="journey-szene" style={{ flex:'1 1 340px', minWidth:0 }}>
+              <PruefungSzene/>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ── Qualität ── */}
       <section aria-label="Qualitätsversprechen" className="section" style={{ background:'#fff' }}>
