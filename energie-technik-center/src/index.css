@@ -349,3 +349,43 @@ h1, h2, h3, h4 { line-height: 1.1; letter-spacing: -0.025em; }
 .reveal-left.d2, .reveal-right.d2 { transition-delay: 0.22s; }
 .reveal-left.d3, .reveal-right.d3 { transition-delay: 0.38s; }
 .reveal-left.d4, .reveal-right.d4 { transition-delay: 0.54s; }
+
+/* ─────────────────────────────────────────
+   JOURNEY PANELS  (Kamera-Fahrt durchs Haus)
+   ───────────────────────────────────────── */
+.journey-panel {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 5rem 0;
+}
+
+/* Text: fährt von unten herein */
+.journey-text {
+  opacity: 0;
+  transform: translateY(42px);
+  transition: opacity 0.72s var(--ease-out), transform 0.75s var(--ease-out);
+}
+
+/* Illustration: zoomed + leicht von unten, mit Verzögerung */
+.journey-szene {
+  opacity: 0;
+  transform: translateY(32px) scale(0.93);
+  transition: opacity 0.88s var(--ease-out) 0.18s,
+              transform 0.88s var(--ease-out) 0.18s;
+  will-change: transform;
+}
+
+.journey-panel.entered .journey-text {
+  opacity: 1;
+  transform: none;
+}
+.journey-panel.entered .journey-szene {
+  opacity: 1;
+  transform: translateY(var(--par, 0px)) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .journey-text, .journey-szene { opacity: 1; transform: none; transition: none; }
+}
