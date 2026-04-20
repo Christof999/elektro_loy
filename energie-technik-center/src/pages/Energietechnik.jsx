@@ -3,168 +3,275 @@ import { Link } from 'react-router-dom';
 import { Sun, Battery, Car, Thermometer, CheckCircle, ArrowRight, Phone } from 'lucide-react';
 import { useMeta } from '../hooks/useMeta';
 
-/* ── Animated SVG Illustrations ── */
-
-function SolarIllustration() {
+/* ── 1. Photovoltaik: Haus mit Solarmodulen + Energiefluss ── */
+function SolarSzene() {
   return (
-    <svg viewBox="0 0 220 110" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <svg viewBox="0 0 460 300" fill="none" xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true" style={{ width:'100%', maxWidth:500 }}>
       <style>{`
-        @keyframes e-sun-ray{0%,100%{opacity:.5}50%{opacity:1}}
-        @keyframes e-shine{0%,100%{opacity:0}50%{opacity:.35}}
-        @keyframes e-flow{0%{stroke-dashoffset:180}100%{stroke-dashoffset:0}}
-        .es-ray{animation:e-sun-ray 3s ease-in-out infinite;transform-origin:178px 28px}
-        .es-s1{animation:e-shine 4s ease-in-out infinite 0s}
-        .es-s2{animation:e-shine 4s ease-in-out infinite 2s}
-        .es-fl{stroke-dasharray:180;animation:e-flow 2.5s linear infinite}
+        @keyframes sol-ray{0%,100%{opacity:.5}50%{opacity:1}}
+        @keyframes sol-flow{0%{stroke-dashoffset:240}100%{stroke-dashoffset:0}}
+        @keyframes sol-glow{0%,100%{opacity:.04}50%{opacity:.18}}
+        @keyframes sol-blink{0%,100%{opacity:.3}50%{opacity:1}}
+        .sol-ray{animation:sol-ray 3s ease-in-out infinite;transform-origin:408px 44px}
+        .sol-f1{stroke-dasharray:240;animation:sol-flow 2.6s linear infinite}
+        .sol-f2{stroke-dasharray:240;animation:sol-flow 2.6s linear infinite .9s}
+        .sol-glow{animation:sol-glow 3s ease-in-out infinite}
+        .sol-blink{animation:sol-blink 1.8s ease-in-out infinite}
       `}</style>
-      <rect width="220" height="110" rx="10" fill="#fefce8"/>
-      <ellipse cx="110" cy="100" rx="110" ry="18" fill="#d1fae5" opacity="0.6"/>
-      <g className="es-ray">
-        {[0,45,90,135,180,225,270,315].map((d,i)=>(
+      <defs>
+        <linearGradient id="sol-sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#bfdbfe"/>
+          <stop offset="100%" stopColor="#eff6ff"/>
+        </linearGradient>
+      </defs>
+      <rect width="460" height="300" rx="12" fill="url(#sol-sky)"/>
+      <rect x="0" y="248" width="460" height="52" fill="#d1fae5"/>
+      <rect x="0" y="246" width="460" height="4" fill="#a7f3d0"/>
+      <g className="sol-ray">
+        {[0,40,80,120,160,200,240,280,320].map((d,i) => (
           <line key={i}
-            x1={178+Math.cos(d*Math.PI/180)*20} y1={28+Math.sin(d*Math.PI/180)*20}
-            x2={178+Math.cos(d*Math.PI/180)*27} y2={28+Math.sin(d*Math.PI/180)*27}
-            stroke="#f59e0b" strokeWidth="2" strokeLinecap="round"/>
+            x1={408+Math.cos(d*Math.PI/180)*30} y1={44+Math.sin(d*Math.PI/180)*30}
+            x2={408+Math.cos(d*Math.PI/180)*42} y2={44+Math.sin(d*Math.PI/180)*42}
+            stroke="#f59e0b" strokeWidth="2.5" strokeLinecap="round"/>
         ))}
       </g>
-      <circle cx="178" cy="28" r="14" fill="#fcd34d" opacity="0.3"/>
-      <circle cx="178" cy="28" r="10" fill="#f59e0b"/>
-      <g transform="translate(28,55) rotate(-14)">
-        <rect width="54" height="34" rx="2" fill="#1e3a5f" stroke="#3b82f6" strokeWidth="0.7"/>
-        <line x1="18" y1="0" x2="18" y2="34" stroke="#3b82f6" strokeWidth="0.5"/>
-        <line x1="36" y1="0" x2="36" y2="34" stroke="#3b82f6" strokeWidth="0.5"/>
-        <line x1="0" y1="11" x2="54" y2="11" stroke="#3b82f6" strokeWidth="0.5"/>
-        <line x1="0" y1="22" x2="54" y2="22" stroke="#3b82f6" strokeWidth="0.5"/>
-        <rect className="es-s1" width="54" height="34" rx="2" fill="white"/>
+      <circle cx="408" cy="44" r="22" fill="#fef9c3" opacity="0.5"/>
+      <circle cx="408" cy="44" r="16" fill="#fcd34d" opacity="0.8"/>
+      <circle cx="408" cy="44" r="10" fill="#f59e0b"/>
+      <rect x="80" y="150" width="250" height="100" fill="#e8dcc8" stroke="#c4aa88" strokeWidth="1.2"/>
+      <polygon points="62,153 205,80 348,153" fill="#b45309" stroke="#92400e" strokeWidth="1"/>
+      <rect x="258" y="94" width="18" height="42" fill="#9e6a50"/>
+      <rect x="178" y="202" width="46" height="48" rx="2" fill="#7c4a1e"/>
+      <circle cx="220" cy="228" r="2.5" fill="#d4a017"/>
+      <rect x="100" y="172" width="52" height="40" rx="2" fill="#bfdbfe" stroke="#c4aa88" strokeWidth="1"/>
+      <line x1="126" y1="172" x2="126" y2="212" stroke="#c4aa88" strokeWidth="0.8"/>
+      <line x1="100" y1="192" x2="152" y2="192" stroke="#c4aa88" strokeWidth="0.8"/>
+      <g transform="translate(112,108) rotate(-23)">
+        <rect width="55" height="34" rx="2" fill="#1e3a5f" stroke="#3b82f6" strokeWidth="0.7"/>
+        <line x1="18" y1="0" x2="18" y2="34" stroke="#3b82f6" strokeWidth="0.5" opacity="0.7"/>
+        <line x1="36" y1="0" x2="36" y2="34" stroke="#3b82f6" strokeWidth="0.5" opacity="0.7"/>
+        <line x1="0" y1="11" x2="55" y2="11" stroke="#3b82f6" strokeWidth="0.5" opacity="0.7"/>
+        <line x1="0" y1="22" x2="55" y2="22" stroke="#3b82f6" strokeWidth="0.5" opacity="0.7"/>
+        <rect className="sol-glow" width="55" height="34" rx="2" fill="#fef9c3"/>
       </g>
-      <g transform="translate(88,48) rotate(-14)">
-        <rect width="54" height="34" rx="2" fill="#1e3a5f" stroke="#3b82f6" strokeWidth="0.7"/>
-        <line x1="18" y1="0" x2="18" y2="34" stroke="#3b82f6" strokeWidth="0.5"/>
-        <line x1="36" y1="0" x2="36" y2="34" stroke="#3b82f6" strokeWidth="0.5"/>
-        <line x1="0" y1="11" x2="54" y2="11" stroke="#3b82f6" strokeWidth="0.5"/>
-        <line x1="0" y1="22" x2="54" y2="22" stroke="#3b82f6" strokeWidth="0.5"/>
-        <rect className="es-s2" width="54" height="34" rx="2" fill="white"/>
+      <g transform="translate(178,93) rotate(-23)">
+        <rect width="55" height="34" rx="2" fill="#1e3a5f" stroke="#3b82f6" strokeWidth="0.7"/>
+        <line x1="18" y1="0" x2="18" y2="34" stroke="#3b82f6" strokeWidth="0.5" opacity="0.7"/>
+        <line x1="36" y1="0" x2="36" y2="34" stroke="#3b82f6" strokeWidth="0.5" opacity="0.7"/>
+        <line x1="0" y1="11" x2="55" y2="11" stroke="#3b82f6" strokeWidth="0.5" opacity="0.7"/>
+        <line x1="0" y1="22" x2="55" y2="22" stroke="#3b82f6" strokeWidth="0.5" opacity="0.7"/>
+        <rect className="sol-glow" width="55" height="34" rx="2" fill="#fef9c3"/>
       </g>
-      <path className="es-fl" d="M112 82 Q140 68 158 62" stroke="#f59e0b" strokeWidth="2" fill="none" strokeLinecap="round"/>
-      <polygon points="148,62 168,44 188,62" fill="#374151"/>
-      <rect x="150" y="62" width="36" height="28" fill="#4b5563"/>
-      <rect x="160" y="74" width="10" height="16" rx="1" fill="#6b7280"/>
-    </svg>
-  );
-}
-
-function BatteryIllustration() {
-  return (
-    <svg viewBox="0 0 220 110" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <style>{`
-        @keyframes bat-fill{0%{height:0px;y:62px}100%{height:24px;y:38px}}
-        @keyframes bat-pulse{0%,100%{opacity:.6}50%{opacity:1}}
-        @keyframes bat-bolt{0%,85%,100%{opacity:0}45%,55%{opacity:1}}
-        .ba-fill{animation:bat-fill 3s ease-in-out infinite alternate}
-        .ba-glow{animation:bat-pulse 2s ease-in-out infinite}
-        .ba-bolt{animation:bat-bolt 2s ease-in-out infinite}
-      `}</style>
-      <rect width="220" height="110" rx="10" fill="#eff6ff"/>
-      <rect x="80" y="22" width="60" height="70" rx="6" fill="#1e3a5f" stroke="#3b82f6" strokeWidth="1.5"/>
-      <rect x="97" y="16" width="26" height="10" rx="3" fill="#3b82f6"/>
-      <rect className="ba-fill" x="86" y="38" width="48" height="24" rx="3" fill="#34d399" opacity="0.85"/>
-      <path className="ba-bolt" d="M114 42 L107 58 L113 58 L107 72 L121 54 L114 54Z" fill="#fcd34d"/>
-      <circle className="ba-glow" cx="110" cy="55" r="30" fill="#3b82f6" opacity="0.06"/>
-      <path d="M50 55 Q65 55 80 55" stroke="#60a5fa" strokeWidth="2" strokeLinecap="round" strokeDasharray="4 3" opacity="0.6"/>
-      <path d="M140 55 Q155 55 170 55" stroke="#60a5fa" strokeWidth="2" strokeLinecap="round" strokeDasharray="4 3" opacity="0.6"/>
-      <circle cx="50" cy="55" r="5" fill="#3b82f6" opacity="0.5"/>
-      <circle cx="170" cy="55" r="5" fill="#3b82f6" opacity="0.5"/>
-    </svg>
-  );
-}
-
-function WallboxIllustration() {
-  return (
-    <svg viewBox="0 0 220 110" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <style>{`
-        @keyframes wb-charge{0%{stroke-dashoffset:200}100%{stroke-dashoffset:0}}
-        @keyframes wb-blink{0%,100%{opacity:.3}50%{opacity:1}}
-        .wb-cable{stroke-dasharray:200;animation:wb-charge 2.2s linear infinite}
-        .wb-dot{animation:wb-blink 1.4s ease-in-out infinite}
-        .wb-dot2{animation:wb-blink 1.4s ease-in-out infinite .7s}
-      `}</style>
-      <rect width="220" height="110" rx="10" fill="#f0fdf4"/>
-      <rect x="100" y="56" width="90" height="32" rx="6" fill="#374151"/>
-      <path d="M114 56 Q126 38 154 38 Q172 38 184 56Z" fill="#4b5563"/>
-      <rect x="122" y="44" width="24" height="14" rx="2" fill="#bfdbfe" opacity="0.8"/>
-      <rect x="152" y="44" width="22" height="14" rx="2" fill="#bfdbfe" opacity="0.8"/>
-      <circle cx="126" cy="90" r="10" fill="#1f2937"/><circle cx="126" cy="90" r="5" fill="#374151"/>
-      <circle cx="172" cy="90" r="10" fill="#1f2937"/><circle cx="172" cy="90" r="5" fill="#374151"/>
-      <rect x="16" y="28" width="44" height="56" rx="5" fill="#1e3a5f" stroke="#3b82f6" strokeWidth="1.2"/>
-      <rect x="24" y="36" width="28" height="18" rx="2" fill="#0f172a"/>
-      <circle className="wb-dot"  cx="34" cy="62" r="4" fill="#34d399"/>
-      <circle className="wb-dot2" cx="46" cy="62" r="4" fill="#34d399"/>
-      <path className="wb-cable" d="M60 55 Q75 55 85 65 Q92 72 100 72"
-        stroke="#10b981" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-      <circle cx="100" cy="72" r="5" fill="#10b981" opacity="0.8"/>
-    </svg>
-  );
-}
-
-function HeatpumpIllustration() {
-  return (
-    <svg viewBox="0 0 220 110" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <style>{`
-        @keyframes hp-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-        @keyframes hp-wave{0%{stroke-dashoffset:60}100%{stroke-dashoffset:0}}
-        .hp-fan{animation:hp-spin 3s linear infinite;transform-origin:60px 58px}
-        .hp-w{stroke-dasharray:60;animation:hp-wave 1.2s linear infinite}
-      `}</style>
-      <rect width="220" height="110" rx="10" fill="#fff7ed"/>
-      <rect x="18" y="28" width="82" height="58" rx="5" fill="#374151" stroke="#6b7280" strokeWidth="1"/>
-      <rect x="22" y="32" width="74" height="50" rx="3" fill="#1f2937"/>
-      <g className="hp-fan">
-        <ellipse cx="60" cy="58" rx="22" ry="5" fill="#4b5563" opacity="0.6"/>
-        <ellipse cx="60" cy="58" rx="5" ry="22" fill="#4b5563" opacity="0.6" transform="rotate(45,60,58)"/>
-        <ellipse cx="60" cy="58" rx="5" ry="22" fill="#4b5563" opacity="0.6" transform="rotate(-45,60,58)"/>
-        <circle cx="60" cy="58" r="6" fill="#6b7280"/>
+      <g transform="translate(244,78) rotate(-23)">
+        <rect width="55" height="34" rx="2" fill="#1e3a5f" stroke="#3b82f6" strokeWidth="0.7"/>
+        <line x1="18" y1="0" x2="18" y2="34" stroke="#3b82f6" strokeWidth="0.5" opacity="0.7"/>
+        <line x1="36" y1="0" x2="36" y2="34" stroke="#3b82f6" strokeWidth="0.5" opacity="0.7"/>
+        <line x1="0" y1="11" x2="55" y2="11" stroke="#3b82f6" strokeWidth="0.5" opacity="0.7"/>
+        <line x1="0" y1="22" x2="55" y2="22" stroke="#3b82f6" strokeWidth="0.5" opacity="0.7"/>
+        <rect className="sol-glow" width="55" height="34" rx="2" fill="#fef9c3"/>
       </g>
-      <path className="hp-w" d="M115 45 Q124 38 133 45 Q142 52 151 45" stroke="#ef4444" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.7"/>
-      <path className="hp-w" d="M115 58 Q124 51 133 58 Q142 65 151 58" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.6"/>
-      <path className="hp-w" d="M115 71 Q124 64 133 71 Q142 78 151 71" stroke="#fbbf24" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.5"/>
-      <polygon points="160,70 185,50 210,70" fill="#374151"/>
-      <rect x="162" y="70" width="46" height="30" fill="#4b5563"/>
-      <rect x="177" y="80" width="14" height="20" rx="1" fill="#6b7280"/>
-      <path d="M100 60 Q120 60 140 58 Q152 57 158 62" stroke="#ef4444" strokeWidth="2" fill="none" strokeLinecap="round" strokeDasharray="4 3" opacity="0.5"/>
+      <rect x="328" y="166" width="44" height="58" rx="4" fill="#1e293b" stroke="#334155" strokeWidth="1"/>
+      <rect x="334" y="172" width="32" height="24" rx="2" fill="#0f172a"/>
+      <text x="350" y="181" textAnchor="middle" fill="#34d399" fontSize="6.5" fontFamily="monospace">4.2kW</text>
+      <text x="350" y="190" textAnchor="middle" fill="#64748b" fontSize="5.5" fontFamily="monospace">WECHSELR.</text>
+      <circle className="sol-blink" cx="350" cy="208" r="3" fill="#34d399"/>
+      <path className="sol-f1" d="M205 150 L205 164 L328 164 L328 195"
+        stroke="#f59e0b" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+      <path className="sol-f2" d="M350 224 L350 248 L300 248"
+        stroke="#34d399" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" opacity="0.8"/>
     </svg>
   );
 }
 
-const AMBER = '#d97706';
+/* ── 2. Stromspeicher: Wandbatterie mit Ladefüllstand ── */
+function SpeicherSzene() {
+  return (
+    <svg viewBox="0 0 460 300" fill="none" xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true" style={{ width:'100%', maxWidth:500 }}>
+      <style>{`
+        @keyframes spe-fill{0%,100%{transform:scaleY(0.06)}50%{transform:scaleY(1)}}
+        @keyframes spe-pulse{0%,100%{opacity:.35}50%{opacity:1}}
+        @keyframes spe-flow{0%{stroke-dashoffset:200}100%{stroke-dashoffset:0}}
+        @keyframes spe-glow{0%,100%{opacity:.04}50%{opacity:.14}}
+        .spe-lvl{animation:spe-fill 4s ease-in-out infinite;transform-origin:230px 150px}
+        .spe-p{animation:spe-pulse 2s ease-in-out infinite}
+        .spe-f1{stroke-dasharray:200;animation:spe-flow 2.8s linear infinite}
+        .spe-f2{stroke-dasharray:200;animation:spe-flow 2.8s linear infinite 1.4s}
+        .spe-glow{animation:spe-glow 4s ease-in-out infinite}
+      `}</style>
+      <rect width="460" height="300" rx="12" fill="#0a1520"/>
+      <rect x="155" y="16" width="150" height="272" fill="#0f1f2e" stroke="#1e3a5f" strokeWidth="1"/>
+      <rect x="184" y="44" width="92" height="200" rx="10" fill="#1e293b" stroke="#334155" strokeWidth="1.5"/>
+      <rect x="192" y="54" width="76" height="96" rx="5" fill="#0f172a"/>
+      <defs>
+        <clipPath id="spe-clip">
+          <rect x="192" y="54" width="76" height="96" rx="5"/>
+        </clipPath>
+      </defs>
+      <rect className="spe-lvl" x="192" y="54" width="76" height="96" rx="3"
+        fill="#34d399" opacity="0.65" clipPath="url(#spe-clip)"/>
+      <text x="230" y="100" textAnchor="middle" fill="#fff" fontSize="22" fontFamily="monospace" fontWeight="700">78%</text>
+      <text x="230" y="115" textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="7" fontFamily="monospace">LADEZUSTAND</text>
+      {[0,1,2,3,4].map(i => (
+        <rect key={i} className="spe-p" x={196+i*14} y="166" width="10" height="14" rx="2"
+          fill={i < 4 ? '#34d399' : '#1e3a5f'}
+          style={{ animationDelay:`${i*0.18}s`, opacity: i >= 4 ? 0.3 : undefined }}/>
+      ))}
+      <path d="M234 192 L225 212 L232 212 L222 236 L242 210 L234 210Z" fill="#fbbf24" opacity="0.85"/>
+      <rect x="212" y="36" width="36" height="12" rx="5" fill="#334155"/>
+      <path className="spe-f1" d="M50 82 Q100 82 155 88 L184 88"
+        stroke="#f59e0b" strokeWidth="1.8" fill="none" strokeLinecap="round"/>
+      <path className="spe-f2" d="M50 222 Q100 222 155 214 L184 214"
+        stroke="#3b82f6" strokeWidth="1.6" fill="none" strokeLinecap="round"/>
+      <path className="spe-f1" d="M276 148 L320 148 L410 148"
+        stroke="#34d399" strokeWidth="1.6" fill="none" strokeLinecap="round" opacity="0.8"/>
+      <text x="42" y="76" fill="#f59e0b" fontSize="8" fontFamily="monospace" opacity="0.7">PV</text>
+      <text x="42" y="216" fill="#3b82f6" fontSize="8" fontFamily="monospace" opacity="0.7">NETZ</text>
+      <text x="415" y="143" fill="#34d399" fontSize="8" fontFamily="monospace" opacity="0.7">HAUS</text>
+      <circle className="spe-glow" cx="230" cy="150" r="90" fill="#34d399"/>
+    </svg>
+  );
+}
 
-const leistungen = [
+/* ── 3. E-Mobilität: Wallbox + Elektroauto ── */
+function WallboxSzene() {
+  return (
+    <svg viewBox="0 0 460 300" fill="none" xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true" style={{ width:'100%', maxWidth:500 }}>
+      <style>{`
+        @keyframes wb2-flow{0%{stroke-dashoffset:320}100%{stroke-dashoffset:0}}
+        @keyframes wb2-seg{0%,100%{opacity:.2}50%{opacity:1}}
+        @keyframes wb2-blink{0%,100%{opacity:.2}50%{opacity:1}}
+        .wb2-cable{stroke-dasharray:320;animation:wb2-flow 2.4s linear infinite}
+        .wb2-s1{animation:wb2-seg 2s ease-in-out infinite 0s}
+        .wb2-s2{animation:wb2-seg 2s ease-in-out infinite .4s}
+        .wb2-s3{animation:wb2-seg 2s ease-in-out infinite .8s}
+        .wb2-s4{animation:wb2-seg 2s ease-in-out infinite 1.2s}
+        .wb2-s5{animation:wb2-seg 2s ease-in-out infinite 1.6s}
+        .wb2-blink{animation:wb2-blink 1.4s ease-in-out infinite}
+      `}</style>
+      <rect width="460" height="300" rx="12" fill="#e8f4fb"/>
+      <rect x="0" y="246" width="460" height="54" fill="#d4d0c8"/>
+      <rect x="0" y="244" width="460" height="4" fill="#bab6ae"/>
+      <rect x="0" y="0" width="92" height="300" rx="12" fill="#e8dcc8"/>
+      <rect x="90" y="0" width="3" height="300" fill="#c4aa88"/>
+      <rect x="16" y="88" width="58" height="96" rx="5" fill="#1e293b" stroke="#334155" strokeWidth="1.2"/>
+      <rect x="24" y="96" width="42" height="30" rx="2" fill="#0f172a"/>
+      <text x="45" y="108" textAnchor="middle" fill="#34d399" fontSize="8.5" fontFamily="monospace">11kW</text>
+      <text x="45" y="120" textAnchor="middle" fill="#64748b" fontSize="6.5" fontFamily="monospace">LADEN</text>
+      {[0,1,2,3,4].map(i => (
+        <rect key={i} className={`wb2-s${i+1}`} x={26+i*7.5} y="140" width="5.5" height="12" rx="2" fill="#34d399"/>
+      ))}
+      <circle cx="45" cy="168" r="8" fill="#0f172a" stroke="#334155" strokeWidth="1"/>
+      <circle cx="45" cy="168" r="4" fill="#334155"/>
+      <circle className="wb2-blink" cx="65" cy="94" r="3" fill="#34d399"/>
+      <path className="wb2-cable"
+        d="M45 176 Q45 198 75 214 Q110 228 160 235 Q210 240 250 240"
+        stroke="#10b981" strokeWidth="3.2" fill="none" strokeLinecap="round"/>
+      <rect x="247" y="234" width="16" height="11" rx="3" fill="#065f46" stroke="#10b981" strokeWidth="1"/>
+      <rect x="245" y="196" width="210" height="52" rx="8" fill="#334155"/>
+      <path d="M285 196 Q308 162 348 155 Q378 150 408 160 Q428 170 436 196Z" fill="#475569"/>
+      <path d="M295 196 Q310 167 345 160 Q370 156 392 166 Q404 175 406 196Z"
+        fill="#93c5fd" opacity="0.55"/>
+      <line x1="348" y1="157" x2="348" y2="196" stroke="#334155" strokeWidth="1.5"/>
+      <circle cx="290" cy="250" r="18" fill="#1f2937"/>
+      <circle cx="290" cy="250" r="9" fill="#374151"/>
+      <circle cx="290" cy="250" r="4" fill="#6b7280"/>
+      <circle cx="418" cy="250" r="18" fill="#1f2937"/>
+      <circle cx="418" cy="250" r="9" fill="#374151"/>
+      <circle cx="418" cy="250" r="4" fill="#6b7280"/>
+      <rect x="247" y="216" width="14" height="10" rx="2" fill="#0f172a" stroke="#10b981" strokeWidth="1"/>
+      <rect x="440" y="210" width="12" height="6" rx="2" fill="#fef3c7" opacity="0.6"/>
+    </svg>
+  );
+}
+
+/* ── 4. Wärmepumpe: Außengerät mit Ventilator ── */
+function WaermepumpeSzene() {
+  return (
+    <svg viewBox="0 0 460 300" fill="none" xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true" style={{ width:'100%', maxWidth:500 }}>
+      <style>{`
+        @keyframes wp-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+        @keyframes wp-wave{0%{stroke-dashoffset:80}100%{stroke-dashoffset:0}}
+        @keyframes wp-flow{0%{stroke-dashoffset:150}100%{stroke-dashoffset:0}}
+        @keyframes wp-blink{0%,100%{opacity:.3}50%{opacity:1}}
+        .wp-fan{animation:wp-spin 2.5s linear infinite;transform-origin:152px 190px}
+        .wp-w1{stroke-dasharray:80;animation:wp-wave 1.4s linear infinite 0s}
+        .wp-w2{stroke-dasharray:80;animation:wp-wave 1.4s linear infinite .35s}
+        .wp-w3{stroke-dasharray:80;animation:wp-wave 1.4s linear infinite .7s}
+        .wp-pipe{stroke-dasharray:150;animation:wp-flow 2.2s linear infinite}
+        .wp-blink{animation:wp-blink 1.8s ease-in-out infinite}
+      `}</style>
+      <rect width="460" height="300" rx="12" fill="#080e1a"/>
+      <rect x="0" y="262" width="460" height="38" fill="#090e09"/>
+      {[[40,20],[90,12],[180,28],[290,14],[370,22],[420,10],[60,50],[340,40]].map(([x,y],i) => (
+        <circle key={i} cx={x} cy={y} r={i%2===0?0.9:1.1} fill="white" opacity={0.3+i*0.06}/>
+      ))}
+      <rect x="318" y="0" width="142" height="300" fill="#0f1f2e" stroke="#1e3a5f" strokeWidth="1"/>
+      <rect x="255" y="192" width="68" height="9" rx="3" fill="#1e293b" stroke="#334155" strokeWidth="0.8"/>
+      <rect x="255" y="206" width="68" height="7" rx="3" fill="#1e293b" stroke="#334155" strokeWidth="0.8"/>
+      <path className="wp-pipe" d="M240 196 L320 196"
+        stroke="#ef4444" strokeWidth="1.8" fill="none" strokeLinecap="round" opacity="0.65"/>
+      <path className="wp-pipe" d="M320 211 L240 211"
+        stroke="#3b82f6" strokeWidth="1.8" fill="none" strokeLinecap="round" opacity="0.65"
+        style={{ animationDelay:'1.1s' }}/>
+      <rect x="60" y="162" width="188" height="102" rx="6" fill="#1e293b" stroke="#334155" strokeWidth="1.2"/>
+      <rect x="66" y="168" width="176" height="90" rx="4" fill="#141e2e"/>
+      {Array.from({length:9},(_,i) => (
+        <line key={i} x1="66" y1={178+i*9} x2="242" y2={178+i*9} stroke="#1e293b" strokeWidth="1.5"/>
+      ))}
+      <circle cx="152" cy="190" r="54" fill="#0a1018" stroke="#1e3a5f" strokeWidth="1"/>
+      <g className="wp-fan">
+        <ellipse cx="152" cy="190" rx="46" ry="10" fill="#334155" opacity="0.75"/>
+        <ellipse cx="152" cy="190" rx="10" ry="46" fill="#334155" opacity="0.75" transform="rotate(45,152,190)"/>
+        <ellipse cx="152" cy="190" rx="10" ry="46" fill="#334155" opacity="0.75" transform="rotate(-45,152,190)"/>
+        <circle cx="152" cy="190" r="8" fill="#475569"/>
+        <circle cx="152" cy="190" r="3.5" fill="#374151"/>
+      </g>
+      <path className="wp-w1" d="M252 170 Q264 162 276 170 Q288 178 300 170" stroke="#ef4444" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.6"/>
+      <path className="wp-w2" d="M252 186 Q264 178 276 186 Q288 194 300 186" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.5"/>
+      <path className="wp-w3" d="M252 202 Q264 194 276 202 Q288 210 300 202" stroke="#fbbf24" strokeWidth="1.8" fill="none" strokeLinecap="round" opacity="0.4"/>
+      <rect x="80" y="154" width="55" height="12" rx="2.5" fill="#1e293b" stroke="#334155" strokeWidth="0.8"/>
+      <circle className="wp-blink" cx="93" cy="160" r="2.5" fill="#34d399"/>
+      <circle className="wp-blink" cx="104" cy="160" r="2.5" fill="#fbbf24" style={{animationDelay:'0.5s'}}/>
+      <rect x="334" y="92" width="78" height="58" rx="4" fill="#0f172a" stroke="#1e3a5f" strokeWidth="1"/>
+      <text x="373" y="116" textAnchor="middle" fill="#f1f5f9" fontSize="18" fontFamily="monospace" fontWeight="700">21°C</text>
+      <text x="373" y="132" textAnchor="middle" fill="#64748b" fontSize="7" fontFamily="monospace">HEIZUNG</text>
+      <circle className="wp-blink" cx="400" cy="100" r="2.5" fill="#34d399" style={{animationDelay:'0.25s'}}/>
+    </svg>
+  );
+}
+
+const sections = [
   {
-    icon: Sun, color: AMBER,
+    icon: Sun, area: 'Dach & Außenanlage', dark: false, reverse: false, bg: '#dbeafe',
     title: 'Photovoltaik',
     desc: 'Wir planen und installieren Ihre Solaranlage – von der Dimensionierung über die Montage bis zur Netzanmeldung und Inbetriebnahme.',
     items: ['Planung & Dimensionierung', 'Montage Dach & Fassade', 'Netzanmeldung & Abnahme', 'Wechselrichter & Monitoring'],
-    Illustration: SolarIllustration,
+    Szene: SolarSzene,
   },
   {
-    icon: Battery, color: AMBER,
+    icon: Battery, area: 'Technikraum', dark: true, reverse: true, bg: '#0a1520',
     title: 'Stromspeicher',
     desc: 'Mit einem Batteriespeicher nutzen Sie Ihren Solarstrom rund um die Uhr und werden unabhängiger vom Stromnetz.',
     items: ['Bedarfsanalyse & Auslegung', 'Integration in PV-Anlage', 'Notstromfähige Systeme', 'Systemüberwachung'],
-    Illustration: BatteryIllustration,
+    Szene: SpeicherSzene,
   },
   {
-    icon: Car, color: AMBER,
+    icon: Car, area: 'Garage & Einfahrt', dark: false, reverse: false, bg: '#ecfdf5',
     title: 'E-Mobilität & Ladestation',
     desc: 'Wir installieren Wallboxen und Ladesysteme für Privatpersonen und Unternehmen – inklusive Lastmanagement und Fördermittelberatung.',
     items: ['Wallbox-Installation', 'Lastmanagementsystem', 'Fördermittelberatung KfW', 'Gewerbliche Ladesäulen'],
-    Illustration: WallboxIllustration,
+    Szene: WallboxSzene,
   },
   {
-    icon: Thermometer, color: AMBER,
+    icon: Thermometer, area: 'Außenbereich', dark: true, reverse: true, bg: '#080e1a',
     title: 'Wärmepumpen',
     desc: 'Als Systempartner installieren wir Luft-Wasser- und Erdwärmepumpen und kümmern uns um die elektrische Anbindung.',
     items: ['Luft-Wasser-Wärmepumpen', 'Erdwärmesysteme', 'Elektrische Einbindung', 'Smart-Grid-fähige Steuerung'],
-    Illustration: HeatpumpIllustration,
+    Szene: WaermepumpeSzene,
   },
 ];
 
@@ -175,12 +282,47 @@ const vorteile = [
   'Langfristiger Service und Monitoring',
 ];
 
+function BulletListe({ items, dark }) {
+  return (
+    <ul style={{ listStyle:'none', display:'flex', flexDirection:'column', gap:'0.45rem', margin:0, padding:0 }}>
+      {items.map(item => (
+        <li key={item} style={{ display:'flex', gap:'0.55rem', alignItems:'center', fontSize:'0.88rem',
+          color: dark ? 'rgba(255,255,255,0.65)' : 'var(--text-secondary)' }}>
+          <CheckCircle size={13} color="var(--primary-dark)" style={{ flexShrink:0 }}/>
+          {item}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function useJourneyParallax() {
+  useEffect(() => {
+    const move = () => {
+      document.querySelectorAll('.journey-szene').forEach(el => {
+        const rect = el.getBoundingClientRect();
+        const fromCenter = rect.top + rect.height / 2 - window.innerHeight / 2;
+        if (el.classList.contains('entered')) {
+          el.style.transform = `translateY(${fromCenter * 0.07}px) scale(1)`;
+        }
+      });
+    };
+    window.addEventListener('scroll', move, { passive: true });
+    return () => window.removeEventListener('scroll', move);
+  }, []);
+}
+
 function useReveal() {
   useEffect(() => {
-    const els = document.querySelectorAll('.reveal');
+    const els = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .journey-panel');
     const io = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.1 });
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          e.target.classList.add('entered');
+        }
+      });
+    }, { threshold: 0.18 });
     els.forEach(el => io.observe(el));
     return () => io.disconnect();
   }, []);
@@ -188,6 +330,7 @@ function useReveal() {
 
 export default function Energietechnik() {
   useReveal();
+  useJourneyParallax();
   useMeta({
     title: 'Energietechnik',
     description: 'Photovoltaik, Stromspeicher, Wärmepumpen und E-Mobilität aus einer Hand. Jetzt kostenlos beraten lassen – in der Region Ansbach und Umgebung.',
@@ -231,48 +374,37 @@ export default function Energietechnik() {
         </div>
       </section>
 
-      {/* ── Leistungen ── */}
-      <section aria-label="Leistungen Energietechnik" className="section" style={{ background: 'var(--bg-light)', borderBottom: '1px solid var(--border)' }}>
-        <div className="container">
-          <div style={{ maxWidth: 520, marginBottom: '3rem' }} className="reveal">
-            <div className="section-eyebrow"><span>Leistungen</span></div>
-            <h2 style={{ fontSize: 'clamp(1.6rem, 2.8vw, 2.2rem)', fontWeight: 800 }}>
-              Was wir im Bereich Energietechnik anbieten
-            </h2>
-          </div>
-
-          {/* Emil: stagger grid */}
-          <div className="stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(270px, 1fr))', gap: '1.25rem' }}>
-            {leistungen.map(({ icon: ItemIcon, color, title, desc, items, Illustration }) => (
-              <div key={title} className="card reveal" style={{ overflow: 'hidden' }}>
-                <div style={{ borderBottom: '1px solid var(--border)' }}>
-                  <Illustration />
+      {/* ── Journey: 4 Energiebereiche ── */}
+      {sections.map(({ icon: Icon, area, dark, reverse, bg, title, desc, items, Szene }) => (
+        <section key={title} className="journey-panel" aria-label={title} style={{ background: bg }}>
+          <div className="container" style={{ width:'100%' }}>
+            <div style={{ display:'flex', flexWrap:'wrap', gap:'3rem', alignItems:'center',
+              flexDirection: reverse ? 'row-reverse' : 'row' }}>
+              <div className="journey-text" style={{ flex:'1 1 260px', minWidth:0 }}>
+                <div style={{ fontSize:'0.7rem', fontWeight:600, letterSpacing:'0.1em',
+                  textTransform:'uppercase',
+                  color: dark ? 'rgba(255,255,255,0.35)' : 'var(--text-secondary)',
+                  marginBottom:'0.85rem', display:'flex', alignItems:'center', gap:'0.4rem' }}>
+                  <Icon size={11} color={dark ? undefined : 'var(--primary-dark)'}/> {area}
                 </div>
-                <div style={{ padding: '1.5rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.65rem' }}>
-                    <div style={{
-                      width: 36, height: 36, borderRadius: 'var(--r-sm)',
-                      background: `color-mix(in srgb, ${color} 10%, transparent)`,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                    }}>
-                      <ItemIcon size={17} color={color} />
-                    </div>
-                    <h3 style={{ fontWeight: 700, fontSize: '1.02rem' }}>{title}</h3>
-                  </div>
-                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.87rem', lineHeight: 1.7, marginBottom: '1rem' }}>{desc}</p>
-                  <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.32rem' }}>
-                    {items.map(i => (
-                      <li key={i} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
-                        <CheckCircle size={12} color={color} style={{ flexShrink: 0 }} /> {i}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <h2 style={{ fontSize:'clamp(1.6rem,2.6vw,2.2rem)', fontWeight:800,
+                  lineHeight:1.1, letterSpacing:'-0.02em', marginBottom:'0.9rem',
+                  color: dark ? '#fff' : 'var(--text-primary)' }}>
+                  {title}
+                </h2>
+                <p style={{ fontSize:'0.92rem', lineHeight:1.7, marginBottom:'1.25rem',
+                  color: dark ? 'rgba(255,255,255,0.5)' : 'var(--text-secondary)' }}>
+                  {desc}
+                </p>
+                <BulletListe dark={dark} items={items}/>
               </div>
-            ))}
+              <div className="journey-szene" style={{ flex:'1 1 340px', minWidth:0 }}>
+                <Szene/>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ))}
 
       {/* ── Nachhaltigkeit ── */}
       <section aria-label="Nachhaltige Energie" className="section" style={{ background: 'var(--bg-white)' }}>
