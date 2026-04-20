@@ -320,4 +320,32 @@ h1, h2, h3, h4 { line-height: 1.1; letter-spacing: -0.025em; }
     opacity: 1;
     transform: none;
   }
+  .reveal-left, .reveal-right {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
+
+/* ─────────────────────────────────────────
+   DIRECTIONAL SCROLL REVEALS
+   ───────────────────────────────────────── */
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-52px);
+  transition: opacity 0.75s var(--ease-out), transform 0.75s var(--ease-out);
+}
+.reveal-right {
+  opacity: 0;
+  transform: translateX(52px);
+  transition: opacity 0.75s var(--ease-out), transform 0.75s var(--ease-out);
+}
+.reveal-left.visible,
+.reveal-right.visible {
+  opacity: 1;
+  transform: none;
+}
+.reveal-left.d1, .reveal-right.d1 { transition-delay: 0.08s; }
+.reveal-left.d2, .reveal-right.d2 { transition-delay: 0.22s; }
+.reveal-left.d3, .reveal-right.d3 { transition-delay: 0.38s; }
+.reveal-left.d4, .reveal-right.d4 { transition-delay: 0.54s; }
